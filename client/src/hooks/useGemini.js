@@ -1,22 +1,31 @@
-import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
-export async function fetchAutopsyNarrative({ failureScore, rootCause, burnImpact, cashDays }) {
-    const res = await axios.post(`${API}/autopsy-plan`, {
-        failureScore,
-        rootCause,
-        burnImpact,
-        cashDays,
+async function postJson(path, payload) {
+    const res = await fetch(`${API_BASE_URL}${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
     });
-    return res.data.narrative;
+
+    if (!res.ok) {
+        let message = 'Request failed';
+        try {
+            const text = await res.text();
+            message = text || message;
+        } catch {
+            // ignore
+        }
+        throw new Error(message);
+    }
+
+    return res.json();
 }
 
-export async function fetchRecoveryPlan({ failureScore, cashDays, topRisks }) {
-    const res = await axios.post(`${API}/recovery-plan`, {
-        failureScore,
-        cashDays,
-        topRisks,
-    });
-    return res.data.actions;
+export async function fetchAutopsyReport(payload) {
+    return postJson('/api/autopsy', payload);
+}
+
+export async function fetchRecoveryPlan(payload) {
+    const data = await postJson('/api/recovery-plan', payload);
+    return data.actions;
 }

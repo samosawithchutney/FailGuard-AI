@@ -6,7 +6,7 @@ import BusinessesPage from './pages/BusinessesPage';
 import Dashboard from './components/Dashboard';
 import AutopsyModal from './components/AutopsyModal';
 import { AnimatePresence } from 'framer-motion';
-import { fetchAutopsyNarrative, fetchRecoveryPlan } from './hooks/useGemini';
+import { fetchAutopsyReport, fetchRecoveryPlan } from './hooks/useGemini';
 import { useBusiness } from './context/BusinessContext';
 
 export default function App() {
@@ -16,6 +16,8 @@ export default function App() {
 
   const [showAutopsy, setShowAutopsy] = useState(false);
   const [autopsyNarrative, setNarrative] = useState(null);
+  const [autopsyTimeline, setAutopsyTimeline] = useState([]);
+  const [autopsyTriggerEvent, setAutopsyTriggerEvent] = useState(null);
   const [recoveryActions, setActions] = useState(null);
   const [recoveryLoading, setRecovLoading] = useState(false);
 
@@ -26,23 +28,51 @@ export default function App() {
     }
   }, [location.pathname, currentBusiness, loadDemo]);
 
-  // Fetch autopsy narrative from Gemini when modal opens
+  const buildAiPayload = () => {
+    const metrics = currentBusiness?.metrics || {};
+    const businessDetails = currentBusiness?.business || {};
+    return {
+      failureScore: scoreResult?.score ?? null,
+      riskBand: scoreResult?.riskBand ?? null,
+      business: {
+        name: currentBusiness?.name ?? businessDetails.name ?? null,
+        industry: currentBusiness?.industry ?? businessDetails.industry ?? null,
+        location: currentBusiness?.location ?? businessDetails.location ?? null,
+        employees: businessDetails.employees ?? currentBusiness?.employees ?? null,
+        founded: businessDetails.founded ?? currentBusiness?.founded ?? null,
+        datasetPeriod: businessDetails.datasetPeriod ?? currentBusiness?.datasetPeriod ?? null,
+      },
+      monthlyRevenue: currentBusiness?.monthlyRevenue ?? metrics.revenue ?? null,
+      monthlyBurn: currentBusiness?.monthlyBurn ?? metrics.expenses ?? null,
+      metrics: {
+        cashDays: metrics.cashDays,
+        revenueGrowth: metrics.revenueGrowth,
+        burnRateRatio: metrics.burnRateRatio,
+        churnRate: metrics.churnRate,
+        grossMargin: metrics.grossMargin,
+      },
+      topRisks: scoreResult?.topRisks || currentBusiness?.topRisks?.map(r => r.factor) || [],
+    };
+  };
+
+  // Fetch autopsy report from backend when modal opens
   const handleOpenAutopsy = async () => {
     setShowAutopsy(true);
-    if (!autopsyNarrative && currentBusiness && scoreResult) {
-      try {
-        const rootCause = currentBusiness.triggerEvent?.description || 'Rapid hiring ignoring cash limits.';
-        const burnImpact = currentBusiness.triggerEvent?.burnImpact || '+30% Burn Rate';
-        const narrative = await fetchAutopsyNarrative({
-          failureScore: scoreResult.score,
-          rootCause,
-          burnImpact,
-          cashDays: currentBusiness.metrics.cashDays,
-        });
-        setNarrative(narrative);
-      } catch {
-        setNarrative('Failure trajectory traced to excessive spending patterns relative to revenue growth. Burn rate exceeded safe limits by 34%. Cash runway critically reduced to immediate danger levels.');
-      }
+    if (!currentBusiness || !scoreResult) return;
+
+    setNarrative(null);
+    setAutopsyTimeline([]);
+    setAutopsyTriggerEvent(null);
+
+    try {
+      const report = await fetchAutopsyReport(buildAiPayload());
+      setNarrative(report?.narrative || null);
+      setAutopsyTimeline(report?.timeline || []);
+      setAutopsyTriggerEvent(report?.triggerEvent || null);
+    } catch (err) {
+      setNarrative('Unable to generate the autopsy report right now.');
+      setAutopsyTimeline([]);
+      setAutopsyTriggerEvent(null);
     }
   };
 
@@ -50,22 +80,10 @@ export default function App() {
     setRecovLoading(true);
     try {
       if (!scoreResult || !currentBusiness) return;
-
-      const actions = await fetchRecoveryPlan({
-        failureScore: scoreResult.score,
-        cashDays: currentBusiness.metrics.cashDays,
-        topRisks: scoreResult.topRisks || [],
-      });
-      setActions(actions);
+      const actions = await fetchRecoveryPlan(buildAiPayload());
+      setActions(actions || null);
     } catch {
-      // Fallback recovery plan
-      setActions([
-        { priority: "HIGH", action: "Freeze all non-essential spending immediately", impact: "Reduces burn rate by an estimated 15-20% within 7 days.", scoreImprovement: 12 },
-        { priority: "HIGH", action: "End discount campaign this week", impact: "Restores per-order margin from current depressed levels.", scoreImprovement: 10 },
-        { priority: "HIGH", action: "Review new hire necessity and pause recruitment", impact: "Saves money in fixed payroll costs.", scoreImprovement: 8 },
-        { priority: "MEDIUM", action: "Launch customer win-back outreach campaign", impact: "Targets recently churned customers to recover 20-30%.", scoreImprovement: 6 },
-        { priority: "LOW", action: "Renegotiate supplier payment terms to net-60", impact: "Extends effective cash runway by 15-20 days.", scoreImprovement: 4 },
-      ]);
+      setActions(null);
     } finally {
       setRecovLoading(false);
     }
@@ -94,8 +112,8 @@ export default function App() {
             <AnimatePresence>
               {showAutopsy && (
                 <AutopsyModal
-                  timeline={currentBusiness.timeline || []}
-                  triggerEvent={currentBusiness.triggerEvent || { date: 'Unknown', monthsBeforeCollapse: 2, burnImpact: 'N/A', cashImpact: 'N/A' }}
+                  timeline={autopsyTimeline}
+                  triggerEvent={autopsyTriggerEvent || { date: 'Unknown', monthsBeforeCollapse: 'N/A', burnImpact: 'N/A', cashImpact: 'N/A' }}
                   narrative={autopsyNarrative}
                   initialMetrics={currentBusiness.metrics}
                   currentMetrics={currentBusiness.metrics}
