@@ -1,25 +1,60 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import FailureScoreGauge from './FailureScoreGauge';
 import MetricsPanel from './MetricsPanel';
 import RiskBadges from './RiskBadges';
 import AlertFeed from './AlertFeed';
 import RecoveryPlan from './RecoveryPlan';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.08, delayChildren: 0.1 }
-    }
-};
+const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#DC2626', CRITICAL: '#DC2626' };
 
-const itemVariants = {
-    hidden: { opacity: 0, y: 16 },
-    visible: {
-        opacity: 1, y: 0,
-        transition: { type: 'spring', stiffness: 100, damping: 20 }
-    }
+function Nav({ onOpenDashboard }) {
+    const navigate = useNavigate();
+    return (
+        <div className="sticky top-0 z-30 h-[56px] flex items-center justify-between px-6 md:px-10"
+            style={{ background: 'rgba(250,250,250,0.90)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #F3F4F6' }}>
+            <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 16, color: '#0A0A0A' }}>FailGuard</span>
+            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                onClick={() => navigate('/')}
+                className="text-sm font-medium text-[#6B7280] hover:text-[#0A0A0A] transition-colors">
+                ← Home
+            </motion.button>
+        </div>
+    );
+}
+
+function AlertBanner({ score, riskBand, onTriggerAutopsy }) {
+    if (score <= 60) return null;
+    return (
+        <div className="flex items-center justify-between px-6 md:px-10 py-3"
+            style={{ background: '#FEF2F2', borderBottom: '1px solid #FECACA' }}>
+            <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-[#DC2626] alert-pulse flex-shrink-0" />
+                <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 13, color: '#DC2626' }}>
+                    {riskBand} — Zara Bakeries is at elevated failure risk
+                </span>
+            </div>
+            <button onClick={onTriggerAutopsy}
+                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 13, color: '#DC2626', background: 'none', border: 'none', cursor: 'pointer' }}>
+                View Autopsy →
+            </button>
+        </div>
+    );
+}
+
+const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.07 } } };
+const itemVariants = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 20 } } };
+
+/* Custom tooltip for chart */
+const ChartTooltip = ({ active, payload, label }) => {
+    if (!active || !payload?.length) return null;
+    return (
+        <div className="bg-white border border-[#E5E7EB] rounded-lg px-3 py-2" style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.08)', fontFamily: 'Inter, sans-serif' }}>
+            <p style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 2 }}>{label}</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: '#0A0A0A' }}>{payload[0].value}</p>
+        </div>
+    );
 };
 
 export default function Dashboard({
@@ -27,135 +62,99 @@ export default function Dashboard({
     historicalScores, recoveryActions, recoveryLoading,
     onTriggerAutopsy, onGenerateRecovery
 }) {
+    const lineColor = BAND_COLOR[scoreResult?.riskBand] || '#DC2626';
+
     return (
-        <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 py-6 lg:py-8">
-            {/* Header — left-aligned per DESIGN_VARIANCE 8 */}
-            <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-                className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-zinc-200"
-            >
-                <div>
-                    <h1 className="text-xl md:text-2xl font-extrabold text-zinc-900 tracking-tight">
-                        FailGuard AI
-                    </h1>
-                    <p className="text-xs md:text-sm text-zinc-500 mt-0.5 tracking-tight">
-                        {business.name} &middot; {business.industry} &middot; {business.location}
-                    </p>
-                </div>
-                <div className="mt-2 sm:mt-0 sm:text-right">
-                    <p className="text-xs text-zinc-400 font-medium">Real-Time Failure Monitor</p>
-                    <p className="text-xs text-zinc-400">Dataset: {business.datasetPeriod}</p>
-                </div>
-            </motion.div>
+        <div style={{ minHeight: '100dvh', background: '#FAFAFA' }}>
+            <Nav />
+            <AlertBanner score={scoreResult?.score} riskBand={scoreResult?.riskBand} onTriggerAutopsy={onTriggerAutopsy} />
 
-            {/* Main Grid — Asymmetric: 2fr 1fr 1fr per DESIGN_VARIANCE 8 */}
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-5 lg:gap-6"
-            >
-                {/* LEFT COLUMN — Gauge + Risk Badges + Metrics */}
-                <motion.div variants={itemVariants} className="space-y-5">
-                    <FailureScoreGauge
-                        score={scoreResult.score}
-                        riskBand={scoreResult.riskBand}
-                        onTriggerAutopsy={onTriggerAutopsy}
-                    />
-                    <RiskBadges topRisks={scoreResult.topRisks} riskData={topRisks} />
-                    <MetricsPanel metrics={metrics} />
-                </motion.div>
-
-                {/* CENTER COLUMN — Historical Chart + Recovery Plan */}
-                <motion.div variants={itemVariants} className="space-y-5">
-                    {/* Historical Score Trend */}
-                    <div className="bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-                        <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-4">Score Trend (3 Years)</p>
-                        <ResponsiveContainer width="100%" height={160}>
-                            <AreaChart data={historicalScores}>
-                                <defs>
-                                    <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#18181b" stopOpacity={0.12} />
-                                        <stop offset="95%" stopColor="#18181b" stopOpacity={0.01} />
-                                    </linearGradient>
-                                </defs>
-                                <XAxis
-                                    dataKey="month"
-                                    tick={{ fontSize: 10, fill: '#a1a1aa' }}
-                                    axisLine={{ stroke: '#e4e4e7' }}
-                                    tickLine={false}
-                                />
-                                <YAxis
-                                    domain={[0, 100]}
-                                    tick={{ fontSize: 10, fill: '#a1a1aa' }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    width={28}
-                                />
-                                <Tooltip
-                                    contentStyle={{
-                                        background: '#18181b',
-                                        border: 'none',
-                                        borderRadius: '8px',
-                                        color: '#fafafa',
-                                        fontSize: '12px',
-                                        fontWeight: 600,
-                                        padding: '6px 10px',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                                    }}
-                                    itemStyle={{ color: '#fafafa' }}
-                                    cursor={{ stroke: '#a1a1aa', strokeDasharray: '4 4' }}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="score"
-                                    stroke="#18181b"
-                                    strokeWidth={2}
-                                    fill="url(#scoreGradient)"
-                                    dot={{ r: 3, fill: '#18181b', strokeWidth: 0 }}
-                                    activeDot={{ r: 5, fill: '#18181b', stroke: '#fafafa', strokeWidth: 2 }}
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
+            <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-6">
+                {/* Page header */}
+                <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+                    className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-5 border-b border-[#F3F4F6]">
+                    <div>
+                        <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 22, color: '#0A0A0A', letterSpacing: '-0.02em', margin: 0 }}>
+                            {business.name}
+                        </h1>
+                        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF', marginTop: 3 }}>
+                            {business.industry} · {business.location} · Dataset: {business.datasetPeriod}
+                        </p>
                     </div>
-
-                    <RecoveryPlan
-                        actions={recoveryActions}
-                        loading={recoveryLoading}
-                        onGenerate={onGenerateRecovery}
-                    />
+                    <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: 12, color: '#9CA3AF', marginTop: 6 }}>
+                        Real-Time Failure Monitor
+                    </p>
                 </motion.div>
 
-                {/* RIGHT COLUMN — Alert Feed */}
-                <motion.div variants={itemVariants} className="space-y-5">
-                    <AlertFeed alerts={alerts} />
+                {/* Main grid — asymmetric 2fr 1fr 1fr */}
+                <motion.div variants={containerVariants} initial="hidden" animate="visible"
+                    className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-5">
 
-                    {/* Business Summary Card */}
-                    <div className="bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-                        <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3">Business Snapshot</p>
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs text-zinc-500">Monthly Revenue</span>
-                                <span className="text-sm font-bold text-zinc-900 font-mono">₹3.8L</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs text-zinc-500">Monthly Burn</span>
-                                <span className="text-sm font-bold text-zinc-900 font-mono">₹5.09L</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs text-zinc-500">Team Size</span>
-                                <span className="text-sm font-bold text-zinc-900 font-mono">{business.employees}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs text-zinc-500">Founded</span>
-                                <span className="text-sm font-bold text-zinc-900">{business.founded}</span>
+                    {/* LEFT — Gauge + Risk Badges + Metrics */}
+                    <motion.div variants={itemVariants} className="space-y-4">
+                        <FailureScoreGauge score={scoreResult.score} riskBand={scoreResult.riskBand} onTriggerAutopsy={onTriggerAutopsy} />
+                        <RiskBadges topRisks={topRisks} riskData={scoreResult.topRisks} />
+                        <MetricsPanel metrics={metrics} />
+                    </motion.div>
+
+                    {/* CENTER — Chart + Recovery */}
+                    <motion.div variants={itemVariants} className="space-y-4">
+                        {/* Score trend chart */}
+                        <div className="bg-white rounded-xl border border-[#E5E7EB] p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-1">Score Trend — 3 Years</p>
+                            <ResponsiveContainer width="100%" height={180}>
+                                <AreaChart data={historicalScores}>
+                                    <defs>
+                                        <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor={lineColor} stopOpacity={0.08} />
+                                            <stop offset="95%" stopColor={lineColor} stopOpacity={0.01} />
+                                        </linearGradient>
+                                    </defs>
+                                    <XAxis dataKey="month" tick={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fill: '#9CA3AF' }}
+                                        axisLine={{ stroke: '#F3F4F6' }} tickLine={false} />
+                                    <YAxis domain={[0, 100]} tick={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fill: '#9CA3AF' }}
+                                        axisLine={false} tickLine={false} width={28} />
+                                    <Tooltip content={<ChartTooltip />} cursor={{ stroke: '#E5E7EB', strokeDasharray: '4 4' }} />
+                                    <ReferenceLine x="Oct 24" stroke="#DC2626" strokeDasharray="4 3" label={{ value: 'Root Cause', position: 'top', fontFamily: 'Inter, sans-serif', fontSize: 10, fill: '#DC2626' }} />
+                                    <Area type="monotone" dataKey="score" stroke={lineColor} strokeWidth={2}
+                                        fill="url(#scoreGrad)"
+                                        dot={{ r: 2.5, fill: lineColor, strokeWidth: 0 }}
+                                        activeDot={{ r: 5, fill: lineColor, stroke: '#FFFFFF', strokeWidth: 2 }} />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <RecoveryPlan actions={recoveryActions} loading={recoveryLoading} onGenerate={onGenerateRecovery} />
+                    </motion.div>
+
+                    {/* RIGHT — Alerts + Business Snapshot */}
+                    <motion.div variants={itemVariants} className="space-y-4">
+                        <AlertFeed alerts={alerts} />
+
+                        {/* Business Snapshot */}
+                        <div className="bg-white rounded-xl border border-[#E5E7EB] p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-4">Business Snapshot</p>
+                            <div className="space-y-0">
+                                {[
+                                    { label: 'Monthly Revenue', value: '₹3.8L' },
+                                    { label: 'Monthly Burn', value: '₹5.09L' },
+                                    { label: 'Team Size', value: business.employees },
+                                    { label: 'Founded', value: business.founded },
+                                ].map((row, i, arr) => (
+                                    <div key={row.label} className="flex justify-between items-center py-3"
+                                        style={{ borderBottom: i < arr.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
+                                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280' }}>{row.label}</span>
+                                        <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 14, color: '#0A0A0A' }}>{row.value}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </motion.div>
-            </motion.div>
+            </div>
         </div>
     );
 }

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
 import demoData from './assets/demo_data.json';
 import { calculateFailureScore } from './engine/scoreEngine';
 import { fetchAutopsyNarrative, fetchRecoveryPlan } from './hooks/useGemini';
@@ -79,33 +81,38 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-[100dvh] bg-zinc-50">
-      <Dashboard
-        business={demoData.business}
-        metrics={metrics}
-        scoreResult={scoreResult}
-        alerts={demoData.alerts}
-        topRisks={demoData.topRisks}
-        historicalScores={demoData.historicalScores}
-        recoveryActions={recoveryActions}
-        recoveryLoading={recoveryLoading}
-        onTriggerAutopsy={handleOpenAutopsy}
-        onGenerateRecovery={handleGenerateRecovery}
-      />
-      <AnimatePresence>
-        {showAutopsy && (
-          <AutopsyModal
-            timeline={demoData.timeline}
-            triggerEvent={demoData.triggerEvent}
-            narrative={autopsyNarrative}
-            initialMetrics={demoData.currentMetrics}
-            currentMetrics={metrics}
-            onMetricsChange={setMetrics}
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/dashboard" element={
+        <div className="min-h-[100dvh] bg-zinc-50">
+          <Dashboard
+            business={demoData.business}
+            metrics={metrics}
             scoreResult={scoreResult}
-            onClose={() => setShowAutopsy(false)}
+            alerts={demoData.alerts}
+            topRisks={demoData.topRisks}
+            historicalScores={demoData.historicalScores}
+            recoveryActions={recoveryActions}
+            recoveryLoading={recoveryLoading}
+            onTriggerAutopsy={handleOpenAutopsy}
+            onGenerateRecovery={handleGenerateRecovery}
           />
-        )}
-      </AnimatePresence>
-    </div>
+          <AnimatePresence>
+            {showAutopsy && (
+              <AutopsyModal
+                timeline={demoData.timeline}
+                triggerEvent={demoData.triggerEvent}
+                narrative={autopsyNarrative}
+                initialMetrics={demoData.currentMetrics}
+                currentMetrics={metrics}
+                onMetricsChange={setMetrics}
+                scoreResult={scoreResult}
+                onClose={() => setShowAutopsy(false)}
+              />
+            )}
+          </AnimatePresence>
+        </div>
+      } />
+    </Routes>
   );
 }

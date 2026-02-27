@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { calculateFailureScore } from '../engine/scoreEngine';
 
+const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#DC2626', CRITICAL: '#DC2626' };
+const BAND_BG = { SAFE: '#F0FDF4', CAUTION: '#FFFBEB', DANGER: '#FEF2F2', CRITICAL: '#FEF2F2' };
+const BAND_BORDER = { SAFE: '#BBF7D0', CAUTION: '#FDE68A', DANGER: '#FECACA', CRITICAL: '#FECACA' };
+
 const SLIDERS = [
     { key: 'cashDays', label: 'Cash Runway (days)', min: 0, max: 180, step: 1 },
     { key: 'revenueGrowth', label: 'Revenue Growth (%)', min: -30, max: 30, step: 0.5 },
@@ -14,8 +18,8 @@ export default function WhatIfSimulator({ initialMetrics, currentMetrics, onMetr
     const simResult = calculateFailureScore(simMetrics);
     const diff = simResult.score - scoreResult.score;
 
-    const handleSlider = (key, value) => {
-        const updated = { ...simMetrics, [key]: parseFloat(value) };
+    const handleSlider = (key, val) => {
+        const updated = { ...simMetrics, [key]: parseFloat(val) };
         setSimMetrics(updated);
         onMetricsChange(updated);
     };
@@ -26,79 +30,61 @@ export default function WhatIfSimulator({ initialMetrics, currentMetrics, onMetr
     };
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 md:p-6">
-            {/* Score comparison */}
-            <div className="flex flex-wrap items-center gap-6 md:gap-8 mb-6">
-                <div className="text-center">
-                    <p className="text-zinc-600 text-xs font-bold uppercase tracking-wider mb-1">Original</p>
-                    <p className="text-white text-4xl font-black font-mono tracking-tighter">{scoreResult.score}</p>
+        <div className="bg-white rounded-2xl border border-[#E5E7EB] p-8" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+            {/* Score comparison row */}
+            <div className="flex flex-wrap items-end gap-6 md:gap-10 mb-8">
+                {/* Original */}
+                <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#9CA3AF] mb-1">Original</p>
+                    <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 900, fontSize: 56, lineHeight: 1, letterSpacing: '-0.03em', color: '#6B7280' }}>
+                        {scoreResult.score}
+                    </span>
                 </div>
-
-                <div className="text-zinc-700 text-xl font-bold">
-                    <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 8h16m0 0l-5-5m5 5l-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </div>
-
-                <div className="text-center">
-                    <p className="text-zinc-600 text-xs font-bold uppercase tracking-wider mb-1">Simulated</p>
-                    <p className={`text-4xl font-black font-mono tracking-tighter ${simResult.score < scoreResult.score ? 'text-emerald-400' : 'text-rose-400'
-                        }`}>
+                {/* Arrow */}
+                <span style={{ fontSize: 20, color: '#9CA3AF', marginBottom: 6 }}>→</span>
+                {/* Simulated */}
+                <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#9CA3AF] mb-1">Simulated</p>
+                    <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 900, fontSize: 56, lineHeight: 1, letterSpacing: '-0.03em', color: BAND_COLOR[simResult.riskBand] || '#0A0A0A' }}>
                         {simResult.score}
-                    </p>
+                    </span>
                 </div>
-
-                <div className="text-center">
-                    <p className="text-zinc-600 text-xs font-bold uppercase tracking-wider mb-1">Change</p>
-                    <p className={`text-2xl font-black font-mono tracking-tighter ${diff < 0 ? 'text-emerald-400' : diff > 0 ? 'text-rose-400' : 'text-zinc-500'
-                        }`}>
+                {/* Change */}
+                <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#9CA3AF] mb-1">Change</p>
+                    <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 28, lineHeight: 1, color: diff < 0 ? '#16A34A' : diff > 0 ? '#DC2626' : '#9CA3AF' }}>
                         {diff > 0 ? '+' : ''}{diff}
-                    </p>
+                    </span>
                 </div>
-
-                <div className="ml-auto">
-                    <motion.span
-                        layout
-                        className={`px-3 py-1.5 rounded-lg text-xs font-black tracking-wider
-              ${simResult.riskBand === 'SAFE' ? 'bg-zinc-800 text-zinc-400' : ''}
-              ${simResult.riskBand === 'CAUTION' ? 'bg-zinc-700 text-white' : ''}
-              ${simResult.riskBand === 'DANGER' ? 'bg-zinc-400 text-zinc-950' : ''}
-              ${simResult.riskBand === 'CRITICAL' ? 'bg-white text-zinc-950' : ''}
-            `}
-                    >
-                        {simResult.riskBand}
-                    </motion.span>
-                </div>
+                {/* Risk band badge */}
+                <motion.span layout className="ml-auto mb-1 self-center px-3 py-1.5 rounded-full text-[11px] font-bold border tracking-wide"
+                    style={{ background: BAND_BG[simResult.riskBand], color: BAND_COLOR[simResult.riskBand], borderColor: BAND_BORDER[simResult.riskBand] }}>
+                    {simResult.riskBand}
+                </motion.span>
             </div>
 
             {/* Sliders */}
-            <div className="space-y-5">
+            <div className="space-y-6">
                 {SLIDERS.map(({ key, label, min, max, step }) => (
                     <div key={key}>
-                        <div className="flex justify-between mb-1.5">
-                            <label className="text-zinc-500 text-xs font-semibold tracking-tight">{label}</label>
-                            <span className="text-white text-xs font-bold font-mono">{simMetrics[key]}</span>
+                        <div className="flex justify-between mb-2">
+                            <label style={{ fontWeight: 500, fontSize: 13, color: '#374151' }}>{label}</label>
+                            <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 13, color: '#0A0A0A' }}>{simMetrics[key]}</span>
                         </div>
-                        <input
-                            type="range"
-                            min={min} max={max} step={step}
+                        <input type="range" min={min} max={max} step={step}
                             value={simMetrics[key]}
                             onChange={e => handleSlider(key, e.target.value)}
-                            className="w-full"
-                        />
+                            className="w-full" />
                     </div>
                 ))}
             </div>
 
-            {/* Reset button */}
-            <motion.button
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleReset}
-                className="mt-5 text-xs text-zinc-600 font-semibold hover:text-zinc-300 transition-colors border border-zinc-800 rounded-lg px-3 py-1.5"
-            >
+            {/* Reset */}
+            <button onClick={handleReset}
+                className="mt-6 underline text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                style={{ fontSize: 12, fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
                 Reset to original values
-            </motion.button>
+            </button>
         </div>
     );
 }

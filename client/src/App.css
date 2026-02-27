@@ -2,106 +2,172 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+/* ─── Global Reset & Font ─────────────────────────────────────── */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
-  background-color: #fafafa;
-  color: #18181b;
-  font-family: 'Geist', 'system-ui', sans-serif;
-  margin: 0;
-  padding: 0;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #FAFAFA;
+  color: #0A0A0A;
+  margin: 0;
 }
 
-/* Root cause pulse animation */
-@keyframes pulse-border {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(24, 24, 27, 0.6); }
-  50%       { box-shadow: 0 0 0 8px rgba(24, 24, 27, 0.0); }
+/* ─── Instrument Serif helper ─────────────────────────────────── */
+.font-serif-display {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+}
+
+/* ─── Range Slider — light theme ────────────────────────────────
+   accent-color drives thumb/fill in Chromium; Firefox needs extra rules */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 9999px;
+  background: #E5E7EB;
+  outline: none;
+  cursor: pointer;
+  accent-color: #0A0A0A;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0A0A0A;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0A0A0A;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+}
+
+/* ─── Pulsing animations ─────────────────────────────────────── */
+@keyframes alertPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.alert-pulse {
+  animation: alertPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes buttonPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(10, 10, 10, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(10, 10, 10, 0.08);
+  }
+}
+
+.button-pulse {
+  animation: buttonPulse 2s ease-in-out infinite;
+}
+
+@keyframes rootCausePulse {
+
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 0 rgba(10, 10, 10, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 8px rgba(10, 10, 10, 0);
+  }
 }
 
 .root-cause-pulse {
-  animation: pulse-border 1.8s ease-in-out infinite;
+  animation: rootCausePulse 2s ease-in-out infinite;
 }
 
-/* Score number count-up */
-.score-number {
-  font-variant-numeric: tabular-nums;
+@keyframes analysisProgress {
+  0% {
+    width: 0%;
+  }
+
+  85% {
+    width: 92%;
+  }
+
+  100% {
+    width: 100%;
+  }
 }
 
-/* Skeleton shimmer */
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+.progress-bar {
+  animation: analysisProgress 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.skeleton-shimmer {
-  background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-.skeleton-shimmer-light {
-  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-/* Custom scrollbar for dark containers */
+/* ─── Dark scrollbar (used inside autopsy dark strip only) ───── */
 .dark-scrollbar::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
+
 .dark-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .dark-scrollbar::-webkit-scrollbar-thumb {
-  background: #3f3f46;
-  border-radius: 2px;
+  background: #E5E7EB;
+  border-radius: 4px;
 }
 
-/* Custom range slider styling */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
-  width: 100%;
+/* ─── Score number font ─────────────────────────────────────── */
+.score-number {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
 }
 
-input[type="range"]::-webkit-slider-track {
-  height: 4px;
-  background: #3f3f46;
-  border-radius: 2px;
+/* ─── Skeleton shimmer ──────────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+
+  100% {
+    background-position: 400px 0;
+  }
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  background: #fafafa;
-  border: 2px solid #71717a;
-  border-radius: 50%;
-  margin-top: -6px;
-  transition: transform 0.15s ease;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
-
-input[type="range"]::-moz-range-track {
-  height: 4px;
-  background: #3f3f46;
-  border-radius: 2px;
-}
-
-input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  background: #fafafa;
-  border: 2px solid #71717a;
-  border-radius: 50%;
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
 }
