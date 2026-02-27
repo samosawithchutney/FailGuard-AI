@@ -178,7 +178,6 @@ export default function AutopsyModal({
                     </motion.div>
                 )}
             </AnimatePresence>
-            <ChatbotWidget />
         </motion.div>
     );
 }

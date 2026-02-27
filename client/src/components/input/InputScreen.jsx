@@ -22,7 +22,7 @@ export default function InputScreen({ onSubmit, onDemo }) {
 
     return (
         <div style={{ background: '#FAFAFA', minHeight: '100vh', paddingBottom: '80px' }}>
-            <div style={{ maxWidth: '640px', margin: '0 auto', padding: '60px 24px 0' }}>
+            <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 24px 0' }}>
 
                 {/* Page header */}
                 <p style={{
@@ -50,8 +50,8 @@ export default function InputScreen({ onSubmit, onDemo }) {
 
                 {/* Tabs */}
                 <div style={{ borderBottom: '1px solid #E5E7EB', display: 'flex', marginBottom: '0' }}>
-                    {TAB('manual', '✏️  Enter Manually')}
-                    {TAB('csv', '📄  Upload CSV File')}
+                    {TAB('manual', <span style={{ display: 'flex', alignItems: 'center' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" /></svg> Enter Manually</span>)}
+                    {TAB('csv', <span style={{ display: 'flex', alignItems: 'center' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg> Upload CSV File</span>)}
                 </div>
 
                 {/* Tab content */}

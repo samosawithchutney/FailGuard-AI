@@ -103,7 +103,9 @@ export default function WhatIfSimulator({ initialMetrics, currentMetrics, onMetr
                     <div key={key} className="group">
                         <div className="flex justify-between items-end mb-3">
                             <label className="font-semibold text-[13px] text-zinc-900">{plain}</label>
-                            <span className="font-display font-bold text-[15px] text-zinc-900 bg-zinc-100 px-2.5 py-1 rounded-lg tabular-nums transition-colors group-hover:bg-zinc-200">{simMetrics[key]}</span>
+                            <span className="font-display font-bold text-[15px] text-zinc-900 bg-zinc-100 px-2.5 py-1 rounded-lg tabular-nums transition-colors group-hover:bg-zinc-200">
+                                {Number(simMetrics[key]).toFixed(step === 1 ? 0 : step === 0.1 ? 1 : 2)}
+                            </span>
                         </div>
                         <input type="range" min={min} max={max} step={step}
                             value={simMetrics[key]}

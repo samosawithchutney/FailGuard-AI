@@ -47,14 +47,14 @@ export default function RecoveryPlan({ actions, loading, onGenerate }) {
 
                 <AnimatePresence>
                     {actions && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 overflow-y-auto max-h-[460px] pr-2 custom-scrollbar">
                             <div style={{
-                                background: '#F4F4F5', border: '1px solid #E4E4E7', borderRadius: '12px',
-                                padding: '14px 16px', marginBottom: '16px',
+                                background: '#FAFAFA', border: '1px solid #E4E4E7', borderRadius: '12px',
+                                padding: '14px 16px', marginBottom: '20px',
                             }}>
                                 <p className="font-medium text-[12.5px] text-zinc-600 leading-relaxed m-0">
                                     These are <strong className="text-zinc-900 font-bold">5 specific actions</strong>, ranked by impact.
-                                    The number next to each (e.g. <strong className="text-zinc-900 font-bold bg-zinc-100 px-1 py-0.5 rounded border border-zinc-300">↓ 12 pts</strong>) shows how much your failure score
+                                    The number next to each (e.g. <strong className="text-zinc-900 font-bold bg-white px-1 py-0.5 rounded border border-zinc-200">↓ 12 pts</strong>) shows how much your failure score
                                     will drop. <strong className="text-zinc-900 font-bold">Lower score = safer business.</strong>
                                 </p>
                             </div>
@@ -65,19 +65,19 @@ export default function RecoveryPlan({ actions, loading, onGenerate }) {
                                         initial={{ opacity: 0, y: 6 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ type: 'spring', stiffness: 100, damping: 20, delay: i * 0.07 }}
-                                        whileHover={{ y: -1, boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}
-                                        className="border rounded-2xl p-4 transition-shadow bg-white hover:bg-zinc-50"
-                                        style={{ borderColor: s.border, borderStyle: s.dashed ? 'dashed' : 'solid', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                                        <div className="flex items-start gap-3">
+                                        whileHover={{ y: -2, boxShadow: '0 8px 24px rgba(0,0,0,0.06)' }}
+                                        className="border rounded-[18px] p-5 mb-4 last:mb-0 transition-all bg-white hover:bg-zinc-50/50"
+                                        style={{ borderColor: s.border, borderStyle: s.dashed ? 'dashed' : 'solid', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+                                        <div className="flex items-start gap-4">
                                             <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-widest flex-shrink-0 mt-0.5 border"
                                                 style={{ background: s.bg, color: s.color, borderColor: s.border }}>
                                                 {action.priority}
                                             </span>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-display font-semibold text-[14px] text-zinc-900 leading-tight">{action.action}</p>
-                                                <p className="text-[12px] font-medium text-zinc-500 mt-1.5 leading-relaxed line-clamp-2">{action.impact}</p>
+                                            <div className="flex-1 min-w-0 pr-2">
+                                                <p className="font-display font-semibold text-[14.5px] text-zinc-900 leading-snug">{action.action}</p>
+                                                <p className="text-[12.5px] font-medium text-zinc-500 mt-2.5 leading-relaxed line-clamp-3 pr-4">{action.impact}</p>
                                             </div>
-                                            <span className="font-bold text-[11px] text-zinc-900 flex-shrink-0 mt-0.5 bg-zinc-100 px-2.5 py-1 rounded-lg border border-zinc-200">
+                                            <span className="font-bold text-[11px] text-zinc-900 flex-shrink-0 mt-0.5 bg-zinc-50 px-2.5 py-1 rounded-lg border border-zinc-200">
                                                 ↓ {action.scoreImprovement} pts
                                             </span>
                                         </div>

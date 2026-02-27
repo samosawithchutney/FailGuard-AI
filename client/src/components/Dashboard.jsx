@@ -9,7 +9,9 @@ import ScoreExplainer from './dashboard/ScoreExplainer';
 import ChatbotWidget from './chatbot/ChatbotWidget';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
-const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#DC2626', CRITICAL: '#DC2626' };
+const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#7C3AED', CRITICAL: '#7C3AED' };
+
+const CheckIcon = <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'text-bottom' }}><polyline points="20 6 9 17 4 12" /></svg>;
 
 function Nav({ onOpenDashboard }) {
     const navigate = useNavigate();
@@ -46,7 +48,7 @@ export default function Dashboard({
     historicalScores, recoveryActions, recoveryLoading,
     onTriggerAutopsy, onGenerateRecovery
 }) {
-    const lineColor = BAND_COLOR[scoreResult?.riskBand] || '#DC2626';
+    const lineColor = BAND_COLOR[scoreResult?.riskBand] || '#7C3AED';
 
     return (
         <div className="min-h-[100dvh] bg-zinc-50 text-zinc-900 font-sans relative overflow-x-hidden selection:bg-zinc-900 selection:text-white">
@@ -72,7 +74,7 @@ export default function Dashboard({
                             )}
                             {business && !business.isDemo && (
                                 <span className="bg-zinc-100 text-zinc-600 border border-zinc-200 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest">
-                                    ✓ YOUR DATA
+                                    {CheckIcon} YOUR DATA
                                 </span>
                             )}
                             {business?.isDemo && (
@@ -113,11 +115,11 @@ export default function Dashboard({
                     </motion.div>
 
                     {/* ROW 2: Score Gauge (Left - 5 cols), Trend & Risks (Right - 7 cols) */}
-                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-4 h-full">
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-5 h-full">
                         <FailureScoreGauge score={scoreResult.score} riskBand={scoreResult.riskBand} onTriggerAutopsy={onTriggerAutopsy} business={business} metrics={metrics} />
                     </motion.div>
 
-                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-8 flex flex-col gap-5">
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-7 flex flex-col gap-5 h-full">
                         <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
                             <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-500 mb-4">Total Profit (Score Trend)</p>
                             <ResponsiveContainer width="100%" height={160}>
@@ -135,16 +137,22 @@ export default function Dashboard({
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
-                        <RiskBadges topRisks={topRisks} riskData={scoreResult.topRisks} />
+                        <div className="h-auto">
+                            <RiskBadges topRisks={topRisks} riskData={scoreResult.topRisks} />
+                        </div>
                     </motion.div>
 
-                    {/* ROW 3: Alert Feed (Left - 7 cols), Recovery Plan (Right - 5 cols) */}
-                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-7">
+                    {/* ROW 3: Alert Feed (Left - 6 cols), Score Explainer (Right - 6 cols) */}
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-6 flex flex-col h-full">
                         <AlertFeed alerts={alerts} />
                     </motion.div>
 
-                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-5 flex flex-col gap-5">
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-6 flex flex-col h-full">
                         <ScoreExplainer score={scoreResult.score} riskBand={scoreResult.riskBand} />
+                    </motion.div>
+
+                    {/* ROW 4: Recovery Plan (Full width) */}
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-12 mt-2">
                         <RecoveryPlan actions={recoveryActions} loading={recoveryLoading} onGenerate={onGenerateRecovery} />
                     </motion.div>
 

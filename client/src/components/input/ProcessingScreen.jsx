@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
+const CheckIcon = <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: '6px' }}><polyline points="20 6 9 17 4 12" /></svg>;
+
 const STEPS = [
     'Reading your business numbers...',
     'Calculating cash runway...',
@@ -57,7 +59,7 @@ export default function ProcessingScreen() {
                             fontWeight: i === step ? 600 : 400,
                         }}
                     >
-                        {i < step ? '✓  ' : ''}{s}
+                        {i < step ? CheckIcon : null}{s}
                     </motion.p>
                 ))}
             </div>

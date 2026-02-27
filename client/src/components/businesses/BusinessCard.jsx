@@ -4,8 +4,8 @@ import { calculateFailureScore } from '../../engine/scoreEngine';
 const BAND = {
     SAFE: { bg: '#F0FDF4', text: '#16A34A', border: '#BBF7D0' },
     CAUTION: { bg: '#FFFBEB', text: '#D97706', border: '#FDE68A' },
-    DANGER: { bg: '#FEF2F2', text: '#DC2626', border: '#FECACA' },
-    CRITICAL: { bg: '#0A0A0A', text: '#FFFFFF', border: '#0A0A0A' },
+    DANGER: { bg: '#FFF7ED', text: '#EA580C', border: '#FED7AA' },
+    CRITICAL: { bg: '#F5F3FF', text: '#7C3AED', border: '#EDE9FE' },
 };
 
 const SCORE_PLAIN = {
@@ -120,7 +120,7 @@ export default function BusinessCard({ business, onSelect, onDelete }) {
                         </p>
                         <p style={{
                             fontFamily: 'Inter', fontSize: '15px', fontWeight: 700,
-                            color: m.warn ? '#DC2626' : '#0A0A0A', margin: 0
+                            color: m.warn ? '#EA580C' : '#0A0A0A', margin: 0
                         }}>
                             {m.value}
                         </p>

@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+const LightbulbIcon = <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: '6px' }}><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg>;
+const AlertIcon = <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px', transform: 'translateY(-1px)' }}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TOOLTIP — shows plain explanation on hover or tap
 // ─────────────────────────────────────────────────────────────────────────────
@@ -58,7 +61,7 @@ function Field({ label, tip, tipExample, prefix, placeholder, value,
             <div style={{
                 display: 'flex', alignItems: 'center', overflow: 'hidden',
                 background: '#FFFFFF', borderRadius: '12px',
-                border: `1px solid ${error ? '#DC2626' : '#E5E7EB'}`,
+                border: `1px solid ${error ? '#7C3AED' : '#E5E7EB'}`,
                 boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}>
                 {prefix && (
@@ -80,7 +83,7 @@ function Field({ label, tip, tipExample, prefix, placeholder, value,
                 />
             </div>
             {error
-                ? <p style={{ fontFamily: 'Inter', fontSize: '12px', color: '#DC2626', margin: '5px 0 0' }}>⚠ {error}</p>
+                ? <p style={{ fontFamily: 'Inter', fontSize: '12px', color: '#7C3AED', margin: '5px 0 0' }}><span style={{ display: 'flex', alignItems: 'center' }}>{AlertIcon} {error}</span></p>
                 : helper && <p style={{ fontFamily: 'Inter', fontSize: '12px', color: '#9CA3AF', margin: '5px 0 0' }}>{helper}</p>
             }
         </div>
@@ -167,14 +170,14 @@ export default function ManualEntryForm({ onSubmit }) {
 
             {/* Reassurance banner */}
             <div style={{
-                background: '#F0F9FF', border: '1px solid #BAE6FD', borderRadius: '12px',
+                background: '#F0FDFA', border: '1px solid #99F6E4', borderRadius: '12px',
                 padding: '14px 18px', marginBottom: '28px',
             }}>
                 <p style={{
-                    fontFamily: 'Inter', fontSize: '13px', color: '#0369A1',
+                    fontFamily: 'Inter', fontSize: '13px', color: '#0F766E',
                     lineHeight: 1.5, margin: 0
                 }}>
-                    💡 <strong>You only need 9 numbers.</strong> These are basic figures you
+                    {LightbulbIcon} <strong>You only need 9 numbers.</strong> These are basic figures you
                     already know — monthly sales, expenses, bank balance, and customer count.
                     Every field is explained below. Takes about 2 minutes.
                 </p>
@@ -208,7 +211,7 @@ export default function ManualEntryForm({ onSubmit }) {
                     value={f.industry} onChange={e => set('industry')(e.target.value)}
                     style={{
                         width: '100%', padding: '14px 16px', background: '#FFFFFF',
-                        border: `1px solid ${errors.industry ? '#DC2626' : '#E5E7EB'}`,
+                        border: `1px solid ${errors.industry ? '#7C3AED' : '#E5E7EB'}`,
                         borderRadius: '12px', fontFamily: 'Inter', fontSize: '16px',
                         color: f.industry ? '#0A0A0A' : '#9CA3AF', outline: 'none', cursor: 'pointer',
                     }}
@@ -225,8 +228,8 @@ export default function ManualEntryForm({ onSubmit }) {
                     <option value="Other">Something else</option>
                 </select>
                 {errors.industry && (
-                    <p style={{ fontFamily: 'Inter', fontSize: '12px', color: '#DC2626', margin: '5px 0 0' }}>
-                        ⚠ {errors.industry}
+                    <p style={{ fontFamily: 'Inter', fontSize: '12px', color: '#7C3AED', margin: '5px 0 0' }}>
+                        <span style={{ display: 'flex', alignItems: 'center' }}>{AlertIcon} {errors.industry}</span>
                     </p>
                 )}
             </div>
