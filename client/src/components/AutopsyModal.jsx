@@ -27,8 +27,7 @@ export default function AutopsyModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 overflow-y-auto"
-            style={{ background: '#FAFAFA' }}>
+            className="fixed inset-0 z-50 overflow-y-auto bg-zinc-50/95 backdrop-blur-sm">
 
             {/* Close button */}
             <motion.button
@@ -37,8 +36,7 @@ export default function AutopsyModal({
                 transition={{ delay: 0.35 }}
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                 onClick={onClose}
-                className="fixed top-5 right-6 z-[60] flex items-center gap-1.5 border border-[#E5E7EB] bg-white rounded-xl px-3.5 py-1.5 hover:border-[#D1D5DB] transition-colors"
-                style={{ fontSize: 13, fontWeight: 600, color: '#374151', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                className="fixed top-5 right-6 z-[60] flex items-center gap-2 border border-zinc-200 bg-white shadow-sm rounded-full px-4 py-2 hover:bg-zinc-50 hover:shadow-md transition-all font-bold text-[11px] uppercase tracking-widest text-zinc-600">
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
                     <path d="M9 2L2 9M2 2l7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
@@ -49,17 +47,17 @@ export default function AutopsyModal({
                 {/* ── LOADING ── */}
                 {loading ? (
                     <motion.div key="loading"
-                        exit={{ opacity: 0, y: -8 }}
+                        exit={{ opacity: 0, scale: 0.98 }}
                         transition={{ duration: 0.3 }}
                         className="flex flex-col items-center justify-center min-h-[100dvh] px-4">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-5">FailGuard Autopsy Engine</p>
-                        <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 28, color: '#0A0A0A', textAlign: 'center', marginBottom: 28, letterSpacing: '-0.01em' }}>
+                        <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-5">FailGuard Autopsy Engine</p>
+                        <p className="font-display font-semibold text-3xl text-zinc-900 text-center mb-8 tracking-tight">
                             Analysing 36 months of business data...
                         </p>
                         {/* Animated dots */}
-                        <div className="flex gap-2 mb-6">
+                        <div className="flex gap-3 mb-8">
                             {[0, 1, 2].map(i => (
-                                <motion.div key={i} className="w-2 h-2 rounded-full bg-[#0A0A0A]"
+                                <motion.div key={i} className="w-2.5 h-2.5 rounded-full bg-zinc-900"
                                     animate={{ opacity: [0.15, 1, 0.15] }}
                                     transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.2, ease: 'easeInOut' }} />
                             ))}
@@ -73,7 +71,7 @@ export default function AutopsyModal({
                             {showSub && (
                                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
                                     className="mt-6 text-[13px] text-[#9CA3AF] text-center">
-                                    Tracing causal chain · Identifying root cause · Building timeline
+                                    Tracing the chain of events · Finding the moment things changed · Identifying the root cause
                                 </motion.p>
                             )}
                         </AnimatePresence>
@@ -87,12 +85,31 @@ export default function AutopsyModal({
                         className="max-w-5xl mx-auto px-4 md:px-8 py-10 md:py-14">
 
                         {/* Header */}
-                        <div className="mb-8">
-                            <h2 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 36, color: '#0A0A0A', letterSpacing: '-0.02em', margin: 0 }}>
+                        <div className="mb-10 text-center">
+                            <h2 className="font-display font-bold text-4xl text-zinc-900 tracking-tighter m-0">
                                 Failure Autopsy Report
                             </h2>
-                            <p style={{ fontSize: 14, color: '#6B7280', marginTop: 6 }}>
-                                Root cause identified · {triggerEvent.date} · {triggerEvent.monthsBeforeCollapse} months before current state
+                            <p className="font-medium text-[13px] text-zinc-500 mt-3">
+                                Root cause identified <span className="opacity-50 mx-1">·</span> {triggerEvent.date} <span className="opacity-50 mx-1">·</span> {triggerEvent.monthsBeforeCollapse} months before current state
+                            </p>
+                        </div>
+
+                        {/* Guided Intro */}
+                        <div className="bg-white border border-zinc-200 shadow-sm rounded-2xl p-6 md:p-8 mb-8 text-center max-w-3xl mx-auto">
+                            <p className="font-bold text-[10px] uppercase tracking-widest-editorial text-zinc-400 mb-4">
+                                WHAT IS FAILURE AUTOPSY MODE?
+                            </p>
+                            <p className="font-medium text-[14px] text-zinc-600 leading-relaxed mb-4">
+                                Think of this like a doctor reviewing your full medical history to find what caused
+                                your illness — not just treating the symptoms. Autopsy Mode scans your entire
+                                business timeline to find the <strong className="font-bold text-zinc-900">exact moment</strong> things started going
+                                wrong, and explains what triggered the decline in plain English.
+                            </p>
+                            <p className="font-medium text-[14px] text-zinc-600 leading-relaxed m-0">
+                                Scroll down to see your timeline. Look for the card labelled{' '}
+                                <strong className="bg-zinc-900 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest mx-1">ROOT CAUSE</strong>
+                                {' '}— that is the event that started the chain reaction. Everything that happened
+                                after was a consequence of that one decision.
                             </p>
                         </div>
 
@@ -100,15 +117,17 @@ export default function AutopsyModal({
                         <motion.div
                             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, type: 'spring', stiffness: 100, damping: 20 }}
-                            className="mb-7 bg-white rounded-xl border border-[#E5E7EB] p-6"
-                            style={{ borderLeft: '4px solid #0A0A0A', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-3">AI Analysis</p>
+                            className="mb-8 bg-zinc-900 rounded-2xl p-6 md:p-8 shadow-md relative overflow-hidden group">
+
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none transition-opacity group-hover:opacity-10" />
+
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4 bg-zinc-800/50 inline-block px-3 py-1 rounded-full border border-zinc-700/50">Forensic AI Analysis</p>
                             {narrative
-                                ? <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.7 }}>{narrative}</p>
-                                : <div className="space-y-2">
-                                    <div className="h-3.5 skeleton-shimmer rounded w-4/5" />
-                                    <div className="h-3.5 skeleton-shimmer rounded w-full" />
-                                    <div className="h-3.5 skeleton-shimmer rounded w-3/5" />
+                                ? <p className="font-serif text-[18px] text-zinc-300 leading-relaxed max-w-4xl">{narrative}</p>
+                                : <div className="space-y-3 opacity-50">
+                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-800 w-4/5" />
+                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-800 w-full" />
+                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-800 w-3/5" />
                                 </div>
                             }
                         </motion.div>
@@ -117,7 +136,7 @@ export default function AutopsyModal({
                         <motion.div
                             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.18, type: 'spring', stiffness: 100, damping: 20 }}
-                            className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                             {[
                                 { label: 'Trigger Date', value: triggerEvent.date, danger: false },
                                 { label: 'Burn Impact', value: triggerEvent.burnImpact, danger: true },
@@ -125,10 +144,9 @@ export default function AutopsyModal({
                                 { label: 'Time to Collapse', value: `${triggerEvent.monthsBeforeCollapse} months`, danger: true },
                             ].map(item => (
                                 <div key={item.label}
-                                    className="bg-white rounded-xl border border-[#E5E7EB] p-5"
-                                    style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-2">{item.label}</p>
-                                    <p style={{ fontFamily: 'Courier New, monospace', fontWeight: 700, fontSize: 22, color: item.danger ? '#DC2626' : '#0A0A0A', lineHeight: 1 }}>{item.value}</p>
+                                    className="bg-white rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col justify-between">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-3">{item.label}</p>
+                                    <p className={`font-display font-semibold text-[22px] tracking-tight ${item.danger ? 'text-red-500' : 'text-zinc-900'}`}>{item.value}</p>
                                 </div>
                             ))}
                         </motion.div>
@@ -137,8 +155,8 @@ export default function AutopsyModal({
                         <motion.div
                             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.26, type: 'spring', stiffness: 100, damping: 20 }}
-                            className="mb-8">
-                            <h3 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 20, color: '#0A0A0A', marginBottom: 16 }}>
+                            className="mb-12">
+                            <h3 className="font-display font-bold text-2xl text-zinc-900 mb-6">
                                 Causal Chain — 36 Month Trace
                             </h3>
                             <CausalTimeline events={timeline} />
@@ -147,8 +165,9 @@ export default function AutopsyModal({
                         {/* What-If Simulator */}
                         <motion.div
                             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.34, type: 'spring', stiffness: 100, damping: 20 }}>
-                            <h3 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 20, color: '#0A0A0A', marginBottom: 16 }}>
+                            transition={{ delay: 0.34, type: 'spring', stiffness: 100, damping: 20 }}
+                            className="mb-8">
+                            <h3 className="font-display font-bold text-2xl text-zinc-900 mb-6">
                                 What If Simulator
                             </h3>
                             <WhatIfSimulator

@@ -5,6 +5,7 @@ import MetricsPanel from './MetricsPanel';
 import RiskBadges from './RiskBadges';
 import AlertFeed from './AlertFeed';
 import RecoveryPlan from './RecoveryPlan';
+import ScoreExplainer from './dashboard/ScoreExplainer';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#DC2626', CRITICAL: '#DC2626' };
@@ -12,12 +13,11 @@ const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#DC2626', CRI
 function Nav({ onOpenDashboard }) {
     const navigate = useNavigate();
     return (
-        <div className="sticky top-0 z-30 h-[56px] flex items-center justify-between px-6 md:px-10"
-            style={{ background: 'rgba(250,250,250,0.90)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #F3F4F6' }}>
-            <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 16, color: '#0A0A0A' }}>FailGuard</span>
+        <div className="sticky top-0 z-30 h-16 flex items-center justify-between px-6 md:px-10 bg-white/70 backdrop-blur-md border-b border-zinc-200/50">
+            <span className="font-display font-bold text-xl tracking-tight text-zinc-900 cursor-pointer" onClick={() => navigate('/')}>FailGuard AI</span>
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/')}
-                className="text-sm font-medium text-[#6B7280] hover:text-[#0A0A0A] transition-colors">
+                className="text-xs font-semibold tracking-widest-editorial text-zinc-500 hover:text-zinc-900 transition-colors uppercase">
                 ← Home
             </motion.button>
         </div>
@@ -27,16 +27,15 @@ function Nav({ onOpenDashboard }) {
 function AlertBanner({ score, riskBand, onTriggerAutopsy }) {
     if (score <= 60) return null;
     return (
-        <div className="flex items-center justify-between px-6 md:px-10 py-3"
-            style={{ background: '#FEF2F2', borderBottom: '1px solid #FECACA' }}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-6 md:px-10 py-3 bg-red-50 border-b border-red-100/50 border-l-4 border-l-red-500 gap-3 sm:gap-0 mt-0.5">
             <div className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-[#DC2626] alert-pulse flex-shrink-0" />
-                <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 13, color: '#DC2626' }}>
-                    {riskBand} — Zara Bakeries is at elevated failure risk
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500 alert-pulse flex-shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                <span className="font-display font-medium text-sm text-red-800 tracking-tight">
+                    <strong className="font-bold">{riskBand}</strong> — Zara Bakeries is at elevated failure risk
                 </span>
             </div>
             <button onClick={onTriggerAutopsy}
-                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 13, color: '#DC2626', background: 'none', border: 'none', cursor: 'pointer' }}>
+                className="font-display font-bold text-[13px] text-red-700 hover:text-red-900 transition-colors bg-white/50 px-4 py-1.5 rounded-full border border-red-200/50 hover:shadow-sm">
                 View Autopsy →
             </button>
         </div>
@@ -65,7 +64,7 @@ export default function Dashboard({
     const lineColor = BAND_COLOR[scoreResult?.riskBand] || '#DC2626';
 
     return (
-        <div style={{ minHeight: '100dvh', background: '#FAFAFA' }}>
+        <div className="min-h-screen bg-zinc-50">
             <Nav />
             <AlertBanner score={scoreResult?.score} riskBand={scoreResult?.riskBand} onTriggerAutopsy={onTriggerAutopsy} />
 
@@ -75,16 +74,29 @@ export default function Dashboard({
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-                    className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 pb-3 border-b border-[#F3F4F6]">
+                    className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-4 border-b border-zinc-200/60">
                     <div>
-                        <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 22, color: '#0A0A0A', letterSpacing: '-0.02em', margin: 0 }}>
-                            {business.name}
-                        </h1>
-                        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF', marginTop: 3 }}>
-                            {business.industry} · {business.location} · Dataset: {business.datasetPeriod}
+                        <div className="flex items-center gap-4 mb-2">
+                            <h1 className="font-display font-bold text-3xl text-zinc-900 tracking-tighter m-0">
+                                {business.name}
+                            </h1>
+                            {business && !business.isDemo && (
+                                <span className="bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest">
+                                    ✓ YOUR DATA
+                                </span>
+                            )}
+                            {business?.isDemo && (
+                                <span className="bg-zinc-100/80 text-zinc-500 border border-zinc-200 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest cursor-pointer hover:bg-zinc-200 transition-colors"
+                                    onClick={() => document.location.href = '/analyse'}>
+                                    DEMO DATA — Analyse your own business →
+                                </span>
+                            )}
+                        </div>
+                        <p className="font-medium text-sm text-zinc-500 mt-2">
+                            {business.industry} <span className="mx-1 opacity-50">·</span> {business.location} <span className="mx-1 opacity-50">·</span> Dataset: {business.datasetPeriod}
                         </p>
                     </div>
-                    <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: 12, color: '#9CA3AF', marginTop: 6 }}>
+                    <p className="font-bold text-[11px] text-zinc-400 mt-6 sm:mt-0 uppercase tracking-widest-editorial">
                         Real-Time Failure Monitor
                     </p>
                 </motion.div>
@@ -96,6 +108,7 @@ export default function Dashboard({
                     {/* LEFT — Gauge + Risk Badges + Metrics */}
                     <motion.div variants={itemVariants} className="space-y-4">
                         <FailureScoreGauge score={scoreResult.score} riskBand={scoreResult.riskBand} onTriggerAutopsy={onTriggerAutopsy} />
+                        <ScoreExplainer score={scoreResult.score} riskBand={scoreResult.riskBand} />
                         <RiskBadges topRisks={topRisks} riskData={scoreResult.topRisks} />
                         <MetricsPanel metrics={metrics} />
                     </motion.div>
@@ -103,8 +116,8 @@ export default function Dashboard({
                     {/* CENTER — Chart + Recovery */}
                     <motion.div variants={itemVariants} className="space-y-4">
                         {/* Score trend chart */}
-                        <div className="bg-white rounded-xl border border-[#E5E7EB] p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-1">Score Trend — 3 Years</p>
+                        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+                            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-4">Score Trend — 3 Years</p>
                             <ResponsiveContainer width="100%" height={180}>
                                 <AreaChart data={historicalScores}>
                                     <defs>
@@ -135,19 +148,18 @@ export default function Dashboard({
                         <AlertFeed alerts={alerts} />
 
                         {/* Business Snapshot */}
-                        <div className="bg-white rounded-xl border border-[#E5E7EB] p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-4">Business Snapshot</p>
-                            <div className="space-y-0">
+                        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+                            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-6">Business Snapshot</p>
+                            <div className="grid grid-cols-2 gap-y-6 gap-x-4">
                                 {[
-                                    { label: 'Monthly Revenue', value: '₹3.8L' },
-                                    { label: 'Monthly Burn', value: '₹5.09L' },
+                                    { label: 'Monthly Revenue', value: '₹' + (business.monthlyRevenue || metrics.revenue || '0').toLocaleString('en-IN') },
+                                    { label: 'Monthly Burn', value: '₹' + (business.monthlyBurn || metrics.expenses || '0').toLocaleString('en-IN') },
                                     { label: 'Team Size', value: business.employees },
                                     { label: 'Founded', value: business.founded },
-                                ].map((row, i, arr) => (
-                                    <div key={row.label} className="flex justify-between items-center py-3"
-                                        style={{ borderBottom: i < arr.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
-                                        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#6B7280' }}>{row.label}</span>
-                                        <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 14, color: '#0A0A0A' }}>{row.value}</span>
+                                ].map((row) => (
+                                    <div key={row.label} className="flex flex-col gap-1">
+                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest inline-block">{row.label}</span>
+                                        <span className="font-display font-semibold text-zinc-900 text-lg tracking-tight">{row.value}</span>
                                     </div>
                                 ))}
                             </div>

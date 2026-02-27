@@ -12,7 +12,7 @@ function AnimatedScore({ score, color }) {
     const display = useTransform(springVal, v => Math.round(v));
     useEffect(() => { motionVal.set(score); }, [score, motionVal]);
     return (
-        <motion.span className="score-number" style={{ fontSize: 72, lineHeight: 1, letterSpacing: '-0.03em', color }}>
+        <motion.span className="font-display font-semibold" style={{ fontSize: 80, lineHeight: 1, letterSpacing: '-0.05em', color }}>
             {display}
         </motion.span>
     );
@@ -23,21 +23,22 @@ export default function FailureScoreGauge({ score, riskBand, onTriggerAutopsy })
     const chartData = [{ value: score, fill: color }];
 
     return (
-        <div className="bg-white rounded-xl border border-[#E5E7EB] p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-5">Failure Score</p>
+        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[-10px] w-56 h-56 rounded-full blur-3xl opacity-10 pointer-events-none transition-colors duration-1000" style={{ background: color }}></div>
+            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-5 relative z-10">Failure Score</p>
 
             <div className="flex flex-col items-center">
                 {/* Radial gauge */}
                 <div className="relative" style={{ width: 220, height: 220 }}>
                     <ResponsiveContainer width="100%" height="100%">
-                        <RadialBarChart cx="50%" cy="50%" innerRadius="62%" outerRadius="88%"
-                            startAngle={220} endAngle={-40} data={chartData} barSize={14}>
-                            <RadialBar dataKey="value" cornerRadius={6} background={{ fill: '#F3F4F6' }} />
+                        <RadialBarChart cx="50%" cy="50%" innerRadius="65%" outerRadius="90%"
+                            startAngle={220} endAngle={-40} data={chartData} barSize={12}>
+                            <RadialBar dataKey="value" cornerRadius={6} background={{ fill: '#F3F4F6' }} isAnimationActive={true} animationDuration={1500} animationEasing="ease-out" />
                         </RadialBarChart>
                     </ResponsiveContainer>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pt-2">
                         <AnimatedScore score={score} color={color} />
-                        <span className="text-[13px] text-[#9CA3AF] mt-1" style={{ fontFamily: 'Inter, sans-serif' }}>out of 100</span>
+                        <span className="text-[10px] font-bold text-zinc-400 mt-2 uppercase tracking-widest-editorial">out of 100</span>
                     </div>
                 </div>
 
@@ -52,7 +53,7 @@ export default function FailureScoreGauge({ score, riskBand, onTriggerAutopsy })
                     {riskBand}
                 </motion.div>
 
-                {/* Autopsy button — only when score > 60 */}
+                {/* Autopsy button */}
                 {score > 60 && (
                     <motion.button
                         initial={{ opacity: 0, y: 6 }}
@@ -61,14 +62,14 @@ export default function FailureScoreGauge({ score, riskBand, onTriggerAutopsy })
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={onTriggerAutopsy}
-                        className="mt-5 w-full py-3 bg-[#0A0A0A] text-white rounded-xl flex items-center justify-center gap-2 button-pulse"
-                        style={{ fontSize: 14, fontWeight: 700 }}
+                        className="mt-6 w-full py-3 bg-white text-zinc-900 border border-zinc-200 rounded-xl flex items-center justify-center gap-2 hover:bg-zinc-50 shadow-sm relative z-10"
+                        style={{ fontSize: 13, fontWeight: 700, fontFamily: 'Inter, sans-serif' }}
                     >
                         <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.5 1.5l.75 2.25L10.5 4.5 8.25 5.75 9 8.25 7.5 6.75 6 8.25l.75-2.5L4.5 4.5l2.25-.75z" stroke="white" strokeWidth="1.2" strokeLinejoin="round" />
-                            <path d="M2 13l3.5-3.5M10.5 10.5l2.5 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                            <path d="M7.5 1.5l.75 2.25L10.5 4.5 8.25 5.75 9 8.25 7.5 6.75 6 8.25l.75-2.5L4.5 4.5l2.25-.75z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+                            <path d="M2 13l3.5-3.5M10.5 10.5l2.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                         </svg>
-                        Trigger Autopsy
+                        Trigger Forensic Autopsy
                     </motion.button>
                 )}
             </div>

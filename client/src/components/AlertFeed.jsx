@@ -13,14 +13,21 @@ const LEVEL_BADGE = {
 
 export default function AlertFeed({ alerts }) {
     return (
-        <div className="bg-white rounded-xl border border-[#E5E7EB]" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+        <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden max-h-[500px]">
             {/* Header with LIVE indicator */}
-            <div className="px-6 pt-5 pb-3 flex items-center justify-between border-b border-[#F3F4F6]">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF]">Live Alerts</p>
-                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#DC2626]">
-                    <span className="w-2 h-2 rounded-full bg-[#DC2626] alert-pulse inline-block" />
+            <div className="px-6 pt-5 pb-3 flex items-center justify-between border-b border-zinc-100 bg-zinc-50/50">
+                <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400">Live Alerts</p>
+                <span className="flex items-center gap-1.5 text-[10px] font-bold text-red-600 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 alert-pulse inline-block shadow-[0_0_6px_rgba(239,68,68,0.8)]" />
                     LIVE
                 </span>
+            </div>
+
+            <div className="px-6 pt-3 pb-1">
+                <p style={{ fontFamily: 'Inter', fontSize: '12px', color: '#9CA3AF', margin: '0', lineHeight: 1.5 }}>
+                    These are automatic warnings triggered when a business signal crosses
+                    a known danger threshold.
+                </p>
             </div>
 
             {/* Alerts list */}
@@ -42,17 +49,19 @@ export default function AlertFeed({ alerts }) {
                                 initial={{ opacity: 0, x: -4 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ type: 'spring', stiffness: 100, damping: 20, delay: i * 0.05 }}
-                                className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#F9FAFB] transition-colors">
-                                {/* Dot */}
-                                <span className={`mt-1.5 flex-shrink-0 w-2 h-2 rounded-full ${dot.pulse ? 'alert-pulse' : ''}`}
-                                    style={{ background: dot.color }} />
+                                className="flex items-start gap-4 p-3.5 rounded-xl border border-zinc-100 bg-zinc-50 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all cursor-default">
+                                {/* Dot indicator */}
+                                <div className="mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center border" style={{ background: badge.bg, borderColor: badge.border }}>
+                                    <span className={`w-2 h-2 rounded-full ${dot.pulse ? 'alert-pulse' : ''}`}
+                                        style={{ background: dot.color }} />
+                                </div>
                                 {/* Text */}
                                 <div className="flex-1 min-w-0">
-                                    <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.5 }}>{alert.msg}</p>
-                                    <p style={{ fontFamily: 'Courier New, monospace', fontSize: 11, color: '#9CA3AF', marginTop: 2 }}>{alert.time}</p>
+                                    <p className="text-[13px] font-medium text-zinc-800 leading-snug">{alert.msg}</p>
+                                    <p className="font-mono text-[10px] text-zinc-400 mt-1 uppercase tracking-widest">{alert.time}</p>
                                 </div>
                                 {/* Badge */}
-                                <span className="flex-shrink-0 px-1.5 py-0.5 rounded text-[11px] font-bold border"
+                                <span className="flex-shrink-0 px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-widest"
                                     style={{ background: badge.bg, color: badge.color, borderColor: badge.border }}>
                                     {alert.level}
                                 </span>

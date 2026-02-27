@@ -1,9 +1,17 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useBusiness } from '../context/BusinessContext';
 
 export default function LandingPage() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { businesses, loadDemo } = useBusiness();
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+    const handleDemo = () => {
+        loadDemo();
+        navigate('/dashboard');
+    };
 
     return (
         <div className="bg-gradient-editorial text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white min-h-screen relative overflow-x-hidden">
@@ -25,11 +33,16 @@ export default function LandingPage() {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        {businesses.length > 0 && (
+                            <button onClick={() => navigate('/businesses')} className="hidden sm:block text-xs font-semibold tracking-widest-editorial text-zinc-500 hover:text-zinc-900 transition-colors uppercase">
+                                My Businesses ({businesses.length})
+                            </button>
+                        )}
                         <button
-                            onClick={() => navigate('/dashboard')}
+                            onClick={() => navigate('/analyse')}
                             className="hidden sm:block text-xs font-semibold tracking-wide bg-zinc-900 text-white px-8 py-3 rounded-full hover:bg-zinc-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                         >
-                            Open Dashboard
+                            Analyse a Business
                         </button>
                         <button
                             className="md:hidden w-10 h-10 flex items-center justify-center text-zinc-900"
@@ -72,15 +85,22 @@ export default function LandingPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start">
                             <button
-                                onClick={() => navigate('/dashboard')}
+                                onClick={() => navigate('/analyse')}
                                 className="w-full sm:w-auto group relative inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-zinc-900 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full transition-all duration-300 shadow-glass-button hover:bg-white hover:shadow-lg hover:-translate-y-1 overflow-hidden"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-tr from-zinc-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                <span className="relative z-10">Open Dashboard</span>
+                                <span className="relative z-10">Analyse My Business</span>
                                 <span className="material-symbols-outlined relative z-10 ml-2 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                             </button>
+                            <button
+                                onClick={handleDemo}
+                                className="w-full sm:w-auto group relative inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-zinc-600 border border-zinc-200 rounded-full transition-all duration-300 hover:text-zinc-900 hover:bg-zinc-50"
+                            >
+                                View Demo
+                            </button>
                             <span className="text-[10px] sm:text-xs font-medium text-zinc-400 tracking-wide uppercase opacity-70">
-                                // No credit card required
+                                <span className="material-symbols-outlined text-[10px] mr-1 align-middle">lock</span>
+                                Data stays on your device
                             </span>
                         </div>
                     </div>

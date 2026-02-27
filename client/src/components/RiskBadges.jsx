@@ -12,9 +12,9 @@ export default function RiskBadges({ topRisks, riskData }) {
     }));
 
     return (
-        <div className="bg-white rounded-xl border border-[#E5E7EB] p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-4">Top Risk Factors</p>
-            <div className="flex flex-col gap-4">
+        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow group">
+            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-5">Top Risk Factors</p>
+            <div className="flex flex-col gap-3">
                 {items.map((risk, i) => {
                     const badge = BADGE[risk.severity] || BADGE.WARNING;
                     return (
@@ -22,21 +22,21 @@ export default function RiskBadges({ topRisks, riskData }) {
                             initial={{ opacity: 0, x: -6 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ type: 'spring', stiffness: 100, damping: 20, delay: i * 0.08 }}
-                            className="flex items-center gap-3">
+                            className="flex items-center gap-3 p-3 rounded-xl border border-zinc-100 bg-zinc-50 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all cursor-default">
                             {/* Rank */}
-                            <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 12, color: '#9CA3AF', minWidth: 24 }}>
-                                0{i + 1}
+                            <span className="font-display font-bold text-xl text-zinc-300 min-w-6 text-center">
+                                {i + 1}
                             </span>
                             {/* Name + value */}
-                            <div className="flex-1 min-w-0">
-                                <p style={{ fontWeight: 600, fontSize: 14, color: '#0A0A0A' }}>{risk.factor}</p>
+                            <div className="flex-1 min-w-0 ml-1">
+                                <p className="font-display font-semibold text-[15px] text-zinc-900 leading-tight tracking-tight">{risk.factor}</p>
                                 {risk.value && risk.value !== '—' && (
-                                    <p style={{ fontFamily: 'Courier New, monospace', fontSize: 12, color: '#6B7280', marginTop: 1 }}>{risk.value}</p>
+                                    <p className="font-mono text-xs text-zinc-500 mt-0.5">{risk.value}</p>
                                 )}
                             </div>
                             {/* Severity badge */}
-                            <span className="flex-shrink-0 px-2 py-0.5 rounded-md text-[11px] font-bold border"
-                                style={{ background: badge.bg, color: badge.color, borderColor: badge.border }}>
+                            <span className="flex-shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                                style={{ background: badge.bg, color: badge.color, border: `1px solid ${badge.border}` }}>
                                 {risk.severity}
                             </span>
                         </motion.div>
