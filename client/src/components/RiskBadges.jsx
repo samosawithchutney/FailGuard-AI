@@ -1,19 +1,21 @@
 import { motion } from 'framer-motion';
 
 const BADGE = {
-    CRITICAL: { bg: '#FEF2F2', color: '#DC2626', border: '#FECACA' },
-    DANGER: { bg: '#FFF7ED', color: '#D97706', border: '#FED7AA' },
-    WARNING: { bg: '#F9FAFB', color: '#6B7280', border: '#E5E7EB' },
+    CRITICAL: { bg: '#18181B', color: '#F4F4F5', border: '#3F3F46' }, // zinc-900
+    DANGER: { bg: '#52525B', color: '#F4F4F5', border: '#71717A' },   // zinc-600
+    WARNING: { bg: '#F4F4F5', color: '#18181B', border: '#D4D4D8' },  // zinc-100
 };
 
 export default function RiskBadges({ topRisks, riskData }) {
-    const items = riskData && riskData.length > 0 ? riskData : (topRisks || []).map((r, i) => ({
-        factor: r, value: '—', severity: i === 0 ? 'CRITICAL' : i === 1 ? 'DANGER' : 'WARNING'
-    }));
+    const rawItems = riskData && riskData.length > 0 ? riskData : (topRisks || []);
+    const items = rawItems.map((r, i) => {
+        if (typeof r === 'string') return { factor: r, value: '—', severity: i === 0 ? 'CRITICAL' : i === 1 ? 'DANGER' : 'WARNING' };
+        return { factor: r.factor || 'Unknown', value: r.value || '—', severity: r.severity || (i === 0 ? 'CRITICAL' : i === 1 ? 'DANGER' : 'WARNING') };
+    });
 
     return (
-        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow group">
-            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-5">Top Risk Factors</p>
+        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow group h-full">
+            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-500 mb-5">Top Risk Factors</p>
             <div className="flex flex-col gap-3">
                 {items.map((risk, i) => {
                     const badge = BADGE[risk.severity] || BADGE.WARNING;
@@ -22,9 +24,9 @@ export default function RiskBadges({ topRisks, riskData }) {
                             initial={{ opacity: 0, x: -6 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ type: 'spring', stiffness: 100, damping: 20, delay: i * 0.08 }}
-                            className="flex items-center gap-3 p-3 rounded-xl border border-zinc-100 bg-zinc-50 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all cursor-default">
+                            className="flex items-center gap-3 p-3 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-white hover:border-zinc-300 hover:shadow-sm transition-all cursor-default">
                             {/* Rank */}
-                            <span className="font-display font-bold text-xl text-zinc-300 min-w-6 text-center">
+                            <span className="font-display font-bold text-xl text-zinc-400 min-w-6 text-center">
                                 {i + 1}
                             </span>
                             {/* Name + value */}

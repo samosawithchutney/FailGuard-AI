@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { calculateFailureScore } from '../engine/scoreEngine';
 
-const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#DC2626', CRITICAL: '#DC2626' };
-const BAND_BG = { SAFE: '#F0FDF4', CAUTION: '#FFFBEB', DANGER: '#FEF2F2', CRITICAL: '#FEF2F2' };
-const BAND_BORDER = { SAFE: '#BBF7D0', CAUTION: '#FDE68A', DANGER: '#FECACA', CRITICAL: '#FECACA' };
+const BAND_COLOR = { SAFE: '#A1A1AA', CAUTION: '#52525B', DANGER: '#18181B', CRITICAL: '#09090B' };
+const BAND_BG = { SAFE: '#F4F4F5', CAUTION: '#E4E4E7', DANGER: '#D4D4D8', CRITICAL: '#A1A1AA' };
+const BAND_BORDER = { SAFE: '#E4E4E7', CAUTION: '#D4D4D8', DANGER: '#A1A1AA', CRITICAL: '#71717A' };
 
 const SLIDERS = [
     {
@@ -56,8 +56,8 @@ export default function WhatIfSimulator({ initialMetrics, currentMetrics, onMetr
     return (
         <div className="bg-white rounded-2xl border border-zinc-200 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
 
-            <div className="bg-blue-50 border border-blue-100/50 rounded-2xl p-5 mb-8">
-                <p className="font-medium text-[13px] text-blue-900 leading-relaxed m-0">
+            <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-5 mb-8">
+                <p className="font-medium text-[13px] text-zinc-900 leading-relaxed m-0">
                     🎛️ <strong className="font-bold">This is your "time machine."</strong> Drag any slider to the left or
                     right to simulate what would happen if you changed that number.
                     Watch your failure score update instantly.
@@ -86,7 +86,7 @@ export default function WhatIfSimulator({ initialMetrics, currentMetrics, onMetr
                 {/* Change */}
                 <div className="mb-2">
                     <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-2">Change</p>
-                    <span className="font-display font-semibold transition-colors duration-500" style={{ fontSize: 32, lineHeight: 1, color: diff < 0 ? '#16A34A' : diff > 0 ? '#EF4444' : '#E4E4E7' }}>
+                    <span className="font-display font-semibold transition-colors duration-500" style={{ fontSize: 32, lineHeight: 1, color: diff < 0 ? '#71717A' : diff > 0 ? '#18181B' : '#E4E4E7' }}>
                         {diff > 0 ? '+' : ''}{diff}
                     </span>
                 </div>

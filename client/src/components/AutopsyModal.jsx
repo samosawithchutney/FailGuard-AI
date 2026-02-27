@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CausalTimeline from './CausalTimeline';
 import WhatIfSimulator from './WhatIfSimulator';
+import ChatbotWidget from './chatbot/ChatbotWidget';
 
 export default function AutopsyModal({
     timeline, triggerEvent, narrative, initialMetrics,
@@ -117,17 +118,15 @@ export default function AutopsyModal({
                         <motion.div
                             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, type: 'spring', stiffness: 100, damping: 20 }}
-                            className="mb-8 bg-zinc-900 rounded-2xl p-6 md:p-8 shadow-md relative overflow-hidden group">
+                            className="mb-8 bg-zinc-50 border border-zinc-200 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden group">
 
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none transition-opacity group-hover:opacity-10" />
-
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4 bg-zinc-800/50 inline-block px-3 py-1 rounded-full border border-zinc-700/50">Forensic AI Analysis</p>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-4 bg-white inline-block px-3 py-1 rounded-full border border-zinc-200 shadow-sm">Forensic AI Analysis</p>
                             {narrative
-                                ? <p className="font-serif text-[18px] text-zinc-300 leading-relaxed max-w-4xl">{narrative}</p>
+                                ? <p className="font-serif text-[18px] text-zinc-900 leading-relaxed max-w-4xl">{narrative}</p>
                                 : <div className="space-y-3 opacity-50">
-                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-800 w-4/5" />
-                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-800 w-full" />
-                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-800 w-3/5" />
+                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-200 w-4/5" />
+                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-200 w-full" />
+                                    <div className="h-4 skeleton-shimmer rounded bg-zinc-200 w-3/5" />
                                 </div>
                             }
                         </motion.div>
@@ -146,7 +145,7 @@ export default function AutopsyModal({
                                 <div key={item.label}
                                     className="bg-white rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col justify-between">
                                     <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-3">{item.label}</p>
-                                    <p className={`font-display font-semibold text-[22px] tracking-tight ${item.danger ? 'text-red-500' : 'text-zinc-900'}`}>{item.value}</p>
+                                    <p className="font-display font-semibold text-[22px] tracking-tight text-zinc-900">{item.value}</p>
                                 </div>
                             ))}
                         </motion.div>
@@ -179,6 +178,7 @@ export default function AutopsyModal({
                     </motion.div>
                 )}
             </AnimatePresence>
+            <ChatbotWidget />
         </motion.div>
     );
 }

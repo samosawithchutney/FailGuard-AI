@@ -6,6 +6,7 @@ import RiskBadges from './RiskBadges';
 import AlertFeed from './AlertFeed';
 import RecoveryPlan from './RecoveryPlan';
 import ScoreExplainer from './dashboard/ScoreExplainer';
+import ChatbotWidget from './chatbot/ChatbotWidget';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const BAND_COLOR = { SAFE: '#16A34A', CAUTION: '#D97706', DANGER: '#DC2626', CRITICAL: '#DC2626' };
@@ -24,23 +25,7 @@ function Nav({ onOpenDashboard }) {
     );
 }
 
-function AlertBanner({ score, riskBand, onTriggerAutopsy }) {
-    if (score <= 60) return null;
-    return (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-6 md:px-10 py-3 bg-red-50 border-b border-red-100/50 border-l-4 border-l-red-500 gap-3 sm:gap-0 mt-0.5">
-            <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500 alert-pulse flex-shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-                <span className="font-display font-medium text-sm text-red-800 tracking-tight">
-                    <strong className="font-bold">{riskBand}</strong> — Zara Bakeries is at elevated failure risk
-                </span>
-            </div>
-            <button onClick={onTriggerAutopsy}
-                className="font-display font-bold text-[13px] text-red-700 hover:text-red-900 transition-colors bg-white/50 px-4 py-1.5 rounded-full border border-red-200/50 hover:shadow-sm">
-                View Autopsy →
-            </button>
-        </div>
-    );
-}
+// AlertBanner removed per user request to implement it somewhere else.
 
 const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.07 } } };
 const itemVariants = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 20 } } };
@@ -64,9 +49,8 @@ export default function Dashboard({
     const lineColor = BAND_COLOR[scoreResult?.riskBand] || '#DC2626';
 
     return (
-        <div className="min-h-screen bg-zinc-50">
+        <div className="min-h-[100dvh] bg-zinc-50 text-zinc-900 font-sans relative overflow-x-hidden selection:bg-zinc-900 selection:text-white">
             <Nav />
-            <AlertBanner score={scoreResult?.score} riskBand={scoreResult?.riskBand} onTriggerAutopsy={onTriggerAutopsy} />
 
             <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-4">
                 {/* Page header */}
@@ -74,19 +58,25 @@ export default function Dashboard({
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-                    className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-4 border-b border-zinc-200/60">
+                    className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-zinc-200">
                     <div>
                         <div className="flex items-center gap-4 mb-2">
                             <h1 className="font-display font-bold text-3xl text-zinc-900 tracking-tighter m-0">
                                 {business.name}
                             </h1>
+                            {scoreResult?.score > 60 && (
+                                <span className="bg-zinc-900 text-white border border-zinc-800 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                    {scoreResult.riskBand} STATUS
+                                </span>
+                            )}
                             {business && !business.isDemo && (
-                                <span className="bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest">
+                                <span className="bg-zinc-100 text-zinc-600 border border-zinc-200 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest">
                                     ✓ YOUR DATA
                                 </span>
                             )}
                             {business?.isDemo && (
-                                <span className="bg-zinc-100/80 text-zinc-500 border border-zinc-200 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest cursor-pointer hover:bg-zinc-200 transition-colors"
+                                <span className="bg-white text-zinc-600 border border-zinc-300 px-3 py-1 rounded-full font-mono text-[10px] uppercase font-bold tracking-widest cursor-pointer hover:bg-zinc-50 transition-colors shadow-sm"
                                     onClick={() => document.location.href = '/analyse'}>
                                     DEMO DATA — Analyse your own business →
                                 </span>
@@ -96,77 +86,71 @@ export default function Dashboard({
                             {business.industry} <span className="mx-1 opacity-50">·</span> {business.location} <span className="mx-1 opacity-50">·</span> Dataset: {business.datasetPeriod}
                         </p>
                     </div>
-                    <p className="font-bold text-[11px] text-zinc-400 mt-6 sm:mt-0 uppercase tracking-widest-editorial">
-                        Real-Time Failure Monitor
-                    </p>
+
+                    {/* View Autopsy Inline Button */}
+                    {scoreResult?.score > 60 && (
+                        <div className="mt-4 sm:mt-0">
+                            <button onClick={onTriggerAutopsy}
+                                className="group relative inline-flex items-center justify-center px-5 py-2 text-[11px] font-bold tracking-widest uppercase text-zinc-900 bg-white border border-zinc-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md hover:border-zinc-300 overflow-hidden">
+                                <div className="absolute inset-0 bg-zinc-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <span className="relative z-10 flex items-center gap-2">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                    View Autopsy Report
+                                    <span className="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                                </span>
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
 
-                {/* Main grid — asymmetric 2fr 1fr 1fr */}
+                {/* Main grid — Dark Bento-Box Layout */}
                 <motion.div variants={containerVariants} initial="hidden" animate="visible"
-                    className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-5">
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
-                    {/* LEFT — Gauge + Risk Badges + Metrics */}
-                    <motion.div variants={itemVariants} className="space-y-4">
-                        <FailureScoreGauge score={scoreResult.score} riskBand={scoreResult.riskBand} onTriggerAutopsy={onTriggerAutopsy} />
-                        <ScoreExplainer score={scoreResult.score} riskBand={scoreResult.riskBand} />
-                        <RiskBadges topRisks={topRisks} riskData={scoreResult.topRisks} />
+                    {/* TOP ROW: 4 Metric Cards */}
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-12">
                         <MetricsPanel metrics={metrics} />
                     </motion.div>
 
-                    {/* CENTER — Chart + Recovery */}
-                    <motion.div variants={itemVariants} className="space-y-4">
-                        {/* Score trend chart */}
-                        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-                            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-4">Score Trend — 3 Years</p>
-                            <ResponsiveContainer width="100%" height={180}>
+                    {/* ROW 2: Score Gauge (Left - 5 cols), Trend & Risks (Right - 7 cols) */}
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-4 h-full">
+                        <FailureScoreGauge score={scoreResult.score} riskBand={scoreResult.riskBand} onTriggerAutopsy={onTriggerAutopsy} business={business} metrics={metrics} />
+                    </motion.div>
+
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-8 flex flex-col gap-5">
+                        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+                            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-500 mb-4">Total Profit (Score Trend)</p>
+                            <ResponsiveContainer width="100%" height={160}>
                                 <AreaChart data={historicalScores}>
                                     <defs>
                                         <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor={lineColor} stopOpacity={0.08} />
-                                            <stop offset="95%" stopColor={lineColor} stopOpacity={0.01} />
+                                            <stop offset="5%" stopColor="#18181B" stopOpacity={0.15} />
+                                            <stop offset="95%" stopColor="#18181B" stopOpacity={0.02} />
                                         </linearGradient>
                                     </defs>
-                                    <XAxis dataKey="month" tick={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fill: '#9CA3AF' }}
-                                        axisLine={{ stroke: '#F3F4F6' }} tickLine={false} />
-                                    <YAxis domain={[0, 100]} tick={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fill: '#9CA3AF' }}
-                                        axisLine={false} tickLine={false} width={28} />
+                                    <XAxis dataKey="month" tick={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fill: '#71717A' }} axisLine={{ stroke: '#E5E7EB' }} tickLine={false} />
+                                    <YAxis domain={[0, 100]} tick={{ fontFamily: 'Inter, sans-serif', fontSize: 11, fill: '#71717A' }} axisLine={false} tickLine={false} width={28} />
                                     <Tooltip content={<ChartTooltip />} cursor={{ stroke: '#E5E7EB', strokeDasharray: '4 4' }} />
-                                    <ReferenceLine x="Oct 24" stroke="#DC2626" strokeDasharray="4 3" label={{ value: 'Root Cause', position: 'top', fontFamily: 'Inter, sans-serif', fontSize: 10, fill: '#DC2626' }} />
-                                    <Area type="monotone" dataKey="score" stroke={lineColor} strokeWidth={2}
-                                        fill="url(#scoreGrad)"
-                                        dot={{ r: 2.5, fill: lineColor, strokeWidth: 0 }}
-                                        activeDot={{ r: 5, fill: lineColor, stroke: '#FFFFFF', strokeWidth: 2 }} />
+                                    <Area type="monotone" dataKey="score" stroke="#18181B" strokeWidth={2.5} fill="url(#scoreGrad)" activeDot={{ r: 5, fill: '#FFFFFF', stroke: '#18181B', strokeWidth: 2 }} dot={{ r: 0 }} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
+                        <RiskBadges topRisks={topRisks} riskData={scoreResult.topRisks} />
+                    </motion.div>
 
+                    {/* ROW 3: Alert Feed (Left - 7 cols), Recovery Plan (Right - 5 cols) */}
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-7">
+                        <AlertFeed alerts={alerts} />
+                    </motion.div>
+
+                    <motion.div variants={itemVariants} className="col-span-1 lg:col-span-5 flex flex-col gap-5">
+                        <ScoreExplainer score={scoreResult.score} riskBand={scoreResult.riskBand} />
                         <RecoveryPlan actions={recoveryActions} loading={recoveryLoading} onGenerate={onGenerateRecovery} />
                     </motion.div>
 
-                    {/* RIGHT — Alerts + Business Snapshot */}
-                    <motion.div variants={itemVariants} className="space-y-4">
-                        <AlertFeed alerts={alerts} />
-
-                        {/* Business Snapshot */}
-                        <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-                            <p className="text-[10px] font-bold uppercase tracking-widest-editorial text-zinc-400 mb-6">Business Snapshot</p>
-                            <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                                {[
-                                    { label: 'Monthly Revenue', value: '₹' + (business.monthlyRevenue || metrics.revenue || '0').toLocaleString('en-IN') },
-                                    { label: 'Monthly Burn', value: '₹' + (business.monthlyBurn || metrics.expenses || '0').toLocaleString('en-IN') },
-                                    { label: 'Team Size', value: business.employees },
-                                    { label: 'Founded', value: business.founded },
-                                ].map((row) => (
-                                    <div key={row.label} className="flex flex-col gap-1">
-                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest inline-block">{row.label}</span>
-                                        <span className="font-display font-semibold text-zinc-900 text-lg tracking-tight">{row.value}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </motion.div>
                 </motion.div>
             </div>
+            <ChatbotWidget />
         </div>
     );
 }

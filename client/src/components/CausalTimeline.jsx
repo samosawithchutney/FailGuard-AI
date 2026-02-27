@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const TYPE_SCORE_COLOR = { normal: '#A1A1AA', warning: '#F59E0B', critical: '#EF4444', root_cause: '#18181B' };
+const TYPE_SCORE_COLOR = { normal: '#A1A1AA', warning: '#52525B', critical: '#18181B', root_cause: '#09090B' };
 
 export default function CausalTimeline({ events }) {
     const scrollRef = useRef(null);
@@ -71,7 +71,7 @@ export default function CausalTimeline({ events }) {
 
                                 {/* Burn impact */}
                                 {event.burnImpact && (
-                                    <p className="font-mono text-[11px] font-bold text-red-600 mt-4 bg-red-50 border border-red-100 inline-block px-2.5 py-1 rounded-md">
+                                    <p className="font-mono text-[11px] font-bold text-zinc-900 mt-4 bg-zinc-100 border border-zinc-200 inline-block px-2.5 py-1 rounded-md">
                                         Burn: {event.burnImpact}
                                     </p>
                                 )}
