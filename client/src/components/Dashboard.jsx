@@ -69,13 +69,13 @@ export default function Dashboard({
             <Nav />
             <AlertBanner score={scoreResult?.score} riskBand={scoreResult?.riskBand} onTriggerAutopsy={onTriggerAutopsy} />
 
-            <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-6">
+            <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-4">
                 {/* Page header */}
                 <motion.div
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-                    className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-5 border-b border-[#F3F4F6]">
+                    className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 pb-3 border-b border-[#F3F4F6]">
                     <div>
                         <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 22, color: '#0A0A0A', letterSpacing: '-0.02em', margin: 0 }}>
                             {business.name}

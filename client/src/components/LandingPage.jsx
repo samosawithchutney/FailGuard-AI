@@ -1,265 +1,331 @@
-import { motion } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom';
-
-/* ── Shared Nav (same across landing + could be imported) ─────── */
-function Nav() {
-    const navigate = useNavigate();
-    return (
-        <nav className="fixed top-0 inset-x-0 z-40 h-[56px] flex items-center justify-between px-6 md:px-12"
-            style={{ background: 'rgba(250,250,250,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #F3F4F6' }}>
-            <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 16, color: '#0A0A0A' }}>FailGuard</span>
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0A0A0A] text-white"
-                style={{ fontSize: 14, fontWeight: 600 }}>
-                Open Dashboard
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8m0 0L7.5 3m3 3.5L7.5 10" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </motion.button>
-        </nav>
-    );
-}
-
-/* ── Stat strip ─────────────────────────────────────────────── */
-const STATS = [
-    '36 Months of Business History Analysed',
-    '14 Months Early Warning Demonstrated',
-    '5 Signals. One Score.',
-];
-
-/* ── Feature cards ─────────────────────────────────────────── */
-const FEATURES = [
-    {
-        num: '01',
-        title: 'Real-Time Failure Prediction',
-        desc: 'Deterministic scoring logic continuously evaluates your live operational metrics against established collapse trajectories.',
-        icon: (
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        ),
-    },
-    {
-        num: '02',
-        title: 'Failure Autopsy Mode',
-        desc: 'A forensic timeline engine that traces the causal chain of events to pinpoint exactly when, why, and where the decline began.',
-        icon: (
-            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3l2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        ),
-    },
-    {
-        num: '03',
-        title: 'What-If Decision Simulator',
-        desc: 'Test alternate business decisions in a safe sandbox environment to instantly see their impact on your operational survival score.',
-        icon: (
-            <path d="M8 7h8M8 11h5m-9-8h10a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        ),
-    },
-];
-
-const DEMO_STATS = [
-    { val: '74/100', label: 'Failure Score' },
-    { val: 'Oct 2024', label: 'Root Cause' },
-    { val: '+34%', label: 'Burn Spike' },
-    { val: '14 Months', label: 'Early Warning' },
-];
-
-const COMPARISON = [
-    ['Shows past', 'Predicts future'],
-    ['Surface metrics', 'Causal signals'],
-    ['No tracing', 'Autopsy Mode'],
-    ['Manual analysis', 'AI recovery'],
-];
-
-const fadeIn = { hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } } };
-const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function LandingPage() {
     const navigate = useNavigate();
+    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
     return (
-        <div style={{ background: '#FAFAFA', color: '#0A0A0A', minHeight: '100dvh' }}>
-            <Nav />
+        <div className="bg-gradient-editorial text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white min-h-screen relative overflow-x-hidden">
+            <div className="fixed inset-0 pointer-events-none z-0 opacity-40 bg-noise mix-blend-overlay"></div>
 
-            {/* ── SECTION 1: HERO ──────────────────────────────────── */}
-            <section className="flex flex-col items-center justify-center text-center px-6" style={{ minHeight: '100dvh', paddingTop: 56 }}>
-                <motion.div initial="hidden" animate="visible" variants={stagger} className="flex flex-col items-center gap-6 max-w-3xl">
-                    {/* Label pill */}
-                    <motion.div variants={fadeIn} className="flex items-center gap-2 px-4 py-2 rounded-full border"
-                        style={{ background: '#FEF2F2', borderColor: '#FCA5A5' }}>
-                        <span className="w-2 h-2 rounded-full bg-[#DC2626] alert-pulse flex-shrink-0" />
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 11, letterSpacing: '0.08em', color: '#DC2626', textTransform: 'uppercase' }}>
-                            Early Warning Intelligence
-                        </span>
-                    </motion.div>
-
-                    {/* Headline */}
-                    <motion.h1 variants={fadeIn} style={{ margin: 0, lineHeight: 1.08, letterSpacing: '-0.03em' }}>
-                        <span className="font-serif-display block" style={{ fontSize: 'clamp(48px, 7vw, 76px)', color: '#0A0A0A' }}>
-                            Predict Business Failure
-                        </span>
-                        <span className="font-serif-display block" style={{ fontSize: 'clamp(48px, 7vw, 76px)', color: '#9CA3AF' }}>
-                            Before It Happens.
-                        </span>
-                    </motion.h1>
-
-                    {/* Sub */}
-                    <motion.p variants={fadeIn} style={{ fontFamily: 'Inter, sans-serif', fontWeight: 400, fontSize: 18, lineHeight: 1.65, color: '#6B7280', maxWidth: 520, margin: 0 }}>
-                        FailGuard AI analyzes hidden operational signals to detect collapse trajectories — and tells you exactly when, why, and where the decline began.
-                    </motion.p>
-
-                    {/* CTA */}
-                    <motion.button variants={fadeIn}
-                        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                        onClick={() => navigate('/dashboard')}
-                        className="px-8 py-4 rounded-full bg-[#0A0A0A] text-white"
-                        style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 15, transition: 'all 0.2s ease' }}>
-                        Open Dashboard →
-                    </motion.button>
-
-                    {/* Tagline */}
-                    <motion.p variants={fadeIn} style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: 11, letterSpacing: '0.08em', color: '#9CA3AF', textTransform: 'uppercase', margin: 0 }}>
-                        Explainable Risk Intelligence for 63M Indian SMBs
-                    </motion.p>
-                </motion.div>
-            </section>
-
-            {/* ── SECTION 2: SOCIAL PROOF BAR ─────────────────────── */}
-            <section style={{ background: '#F3F4F6', padding: '16px 0' }}>
-                <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-0">
-                    {STATS.map((s, i) => (
-                        <div key={i} className="flex items-center gap-4">
-                            {i > 0 && <span style={{ color: '#D1D5DB', display: 'none' }} className="sm:inline">|</span>}
-                            <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 13, color: '#374151', textAlign: 'center' }}>{s}</span>
-                            {i < STATS.length - 1 && <span className="hidden sm:inline" style={{ color: '#D1D5DB', marginLeft: 16, marginRight: 16 }}>|</span>}
+            <nav className="w-full fixed top-0 z-[100] bg-white/70 backdrop-blur-md border-b border-zinc-200/50">
+                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate('/')}>
+                        <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-95 transition-transform duration-300">
+                            <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
                         </div>
-                    ))}
+                        <span className="font-display font-bold text-xl tracking-tight text-zinc-900">FailGuard AI</span>
+                    </div>
+
+                    <div className="hidden md:flex gap-10 text-xs font-semibold tracking-widest-editorial text-zinc-500 uppercase">
+                        <a className="hover:text-zinc-900 transition-colors" href="#features">Features</a>
+                        <a className="hover:text-zinc-900 transition-colors" href="#about">About</a>
+                        <a className="hover:text-zinc-900 transition-colors cursor-pointer" onClick={() => navigate('/dashboard')}>Dashboard</a>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => navigate('/dashboard')}
+                            className="hidden sm:block text-xs font-semibold tracking-wide bg-zinc-900 text-white px-8 py-3 rounded-full hover:bg-zinc-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                        >
+                            Open Dashboard
+                        </button>
+                        <button
+                            className="md:hidden w-10 h-10 flex items-center justify-center text-zinc-900"
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        >
+                            <span className="material-symbols-outlined">{mobileMenuOpen ? 'close' : 'menu'}</span>
+                        </button>
+                    </div>
                 </div>
-            </section>
 
-            {/* ── SECTION 3: ABOUT ─────────────────────────────────── */}
-            <section className="max-w-[1100px] mx-auto px-6 py-20 md:py-28 grid md:grid-cols-[55%_45%] gap-12 md:gap-16">
-                {/* Left */}
-                <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={fadeIn}>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] mb-4">The Problem</p>
-                    <h2 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 'clamp(28px, 3.5vw, 36px)', color: '#0A0A0A', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 24 }}>
-                        Your dashboard shows you what happened. Not what's about to.
-                    </h2>
-                    <div style={{ fontSize: 15, color: '#4B5563', lineHeight: 1.7 }} className="space-y-4">
-                        <p>Businesses rarely fail suddenly. Collapse is almost always preceded by a silent accumulation of risk — a compounding series of small decisions that slowly erode operational health and cash runway.</p>
-                        <p>Traditional analytics dashboards show you lagging indicators of performance. They tell you what happened last quarter, but they don't alert you when your current trajectory crosses the threshold into fatal insolvency.</p>
-                        <p style={{ fontWeight: 600, color: '#0A0A0A' }}>FailGuard AI shifts the paradigm from observation to prediction. We detect early risk signals, trace the causal origin of decline, and provide executable AI recovery plans to course-correct before it's too late.</p>
+                {/* Mobile Menu */}
+                <div className={`md:hidden absolute top-20 left-0 w-full bg-white border-b border-zinc-200 transition-all duration-300 shadow-xl overflow-hidden ${mobileMenuOpen ? 'max-h-72' : 'max-h-0'}`}>
+                    <div className="flex flex-col p-6 gap-6 text-xs font-semibold tracking-widest-editorial text-zinc-500 uppercase">
+                        <a className="hover:text-zinc-900 transition-colors" href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
+                        <a className="hover:text-zinc-900 transition-colors" href="#about" onClick={() => setMobileMenuOpen(false)}>About</a>
+                        <a className="hover:text-zinc-900 transition-colors" href="#" onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}>Dashboard</a>
+                        <button
+                            onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}
+                            className="sm:hidden text-center bg-zinc-900 text-white py-4 rounded-full font-bold"
+                        >
+                            Open Dashboard
+                        </button>
                     </div>
-                    {/* 3 inline stats */}
-                    <div className="mt-8 pt-8 border-t border-[#F3F4F6] grid grid-cols-3 gap-6">
-                        {[
-                            { num: '70%', label: 'of SMBs fail' },
-                            { num: '₹700M', label: 'avg investor loss' },
-                            { num: '67', label: 'days avg runway at detection', suffix: 'days' },
-                        ].map(s => (
-                            <div key={s.num}>
-                                <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 32, color: '#0A0A0A', letterSpacing: '-0.02em', lineHeight: 1 }}>{s.num}</p>
-                                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#6B7280', marginTop: 4, lineHeight: 1.4 }}>{s.label}</p>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
+                </div>
+            </nav>
 
-                {/* Right — comparison card */}
-                <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={fadeIn}
-                    className="self-center bg-white rounded-2xl border border-[#E5E7EB] p-8"
-                    style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}>
-                    <div className="flex items-center justify-between mb-5 pb-4 border-b border-[#F3F4F6]">
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 13, color: '#9CA3AF' }}>Traditional Tools</span>
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 11, color: '#9CA3AF' }}>vs</span>
-                        <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 13, color: '#0A0A0A' }}>FailGuard</span>
+            <section className="relative pt-16 pb-16 lg:pt-20 lg:pb-20 overflow-hidden z-10">
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 items-center">
+                    <div className="lg:col-span-6 relative z-20 text-center lg:text-left">
+                        <div className="inline-block mb-6 px-3 py-1 border border-zinc-300 rounded-full bg-white/50 backdrop-blur-sm">
+                            <span className="text-[10px] font-bold tracking-widest uppercase text-zinc-500">Editorial Release v2.0</span>
+                        </div>
+                        <h1 className="font-display text-editorial-headline text-5xl sm:text-7xl md:text-8xl lg:text-8xl xl:text-[6.5rem] leading-[0.9] sm:leading-[0.85] tracking-tighter-editorial mb-8 text-zinc-900">
+                            Predict <br className="hidden sm:block" />
+                            <span className="text-zinc-400 italic font-serif tracking-normal">Business</span> <br className="hidden sm:block" />
+                            Failure.
+                        </h1>
+                        <p className="text-base sm:text-lg md:text-xl text-zinc-600 leading-relaxed max-w-lg mb-10 font-normal tracking-tight border-l-0 lg:border-l lg:border-zinc-300 lg:pl-6 mx-auto lg:ml-1 lg:mr-0">
+                            Neutralize risk before it becomes irreversible. We analyze hidden operational signals to detect collapse trajectories early.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start">
+                            <button
+                                onClick={() => navigate('/dashboard')}
+                                className="w-full sm:w-auto group relative inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-zinc-900 bg-white/80 backdrop-blur-xl border border-white/40 rounded-full transition-all duration-300 shadow-glass-button hover:bg-white hover:shadow-lg hover:-translate-y-1 overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-tr from-zinc-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <span className="relative z-10">Open Dashboard</span>
+                                <span className="material-symbols-outlined relative z-10 ml-2 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            </button>
+                            <span className="text-[10px] sm:text-xs font-medium text-zinc-400 tracking-wide uppercase opacity-70">
+                                // No credit card required
+                            </span>
+                        </div>
                     </div>
-                    <div className="space-y-4">
-                        {COMPARISON.map(([old, neu], i) => (
-                            <div key={i} className="flex items-center justify-between gap-4">
-                                <span style={{ fontSize: 14, color: '#9CA3AF', textDecoration: 'line-through' }}>{old}</span>
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4-4 4" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                                <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 14, color: '#0A0A0A' }}>{neu}</span>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
-            </section>
 
-            {/* ── SECTION 4: FEATURES ──────────────────────────────── */}
-            <section className="max-w-[1100px] mx-auto px-6 pb-20 md:pb-28">
-                <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger}>
-                    <motion.p variants={fadeIn} className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9CA3AF] text-center mb-4">Core Capabilities</motion.p>
-                    <motion.h2 variants={fadeIn} style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 'clamp(28px, 3.5vw, 40px)', color: '#0A0A0A', letterSpacing: '-0.02em', textAlign: 'center', marginBottom: 48 }}>
-                        Everything you need to see what's coming.
-                    </motion.h2>
-                    <div className="grid md:grid-cols-3 gap-5">
-                        {FEATURES.map((f, i) => (
-                            <motion.div key={i} variants={fadeIn}
-                                whileHover={{ y: -4, boxShadow: '0 12px 28px rgba(0,0,0,0.09)' }}
-                                className="bg-white rounded-2xl border border-[#E5E7EB] p-8 flex flex-col group transition-all"
-                                style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)', cursor: 'default' }}>
-                                {/* Background number */}
-                                <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 900, fontSize: 64, color: '#F3F4F6', lineHeight: 1, marginBottom: 16, letterSpacing: '-0.04em' }}>{f.num}</p>
-                                {/* Icon */}
-                                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-colors group-hover:bg-[#0A0A0A]" style={{ background: '#F9FAFB' }}>
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-[#6B7280] group-hover:text-white transition-colors">
-                                        {f.icon}
-                                    </svg>
+                    <div className="lg:col-span-6 relative z-10 order-first lg:order-last mb-12 lg:mb-0">
+                        <div className="relative w-full aspect-square sm:aspect-video lg:aspect-auto lg:h-[600px] transform scale-100 lg:translate-y-8">
+                            <div className="absolute inset-0 bg-white/40 backdrop-blur-2xl rounded-3xl shadow-dashboard border border-white/60 overflow-hidden group">
+                                <div className="h-10 border-b border-zinc-200/50 flex items-center px-4 gap-2 bg-white/40">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-red-400/60"></div>
+                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/60"></div>
+                                    <div className="w-2.5 h-2.5 rounded-full bg-green-400/60"></div>
                                 </div>
-                                <h3 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 20, color: '#0A0A0A', marginBottom: 10, letterSpacing: '-0.01em' }}>{f.title}</h3>
-                                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: '#6B7280', lineHeight: 1.65, flex: 1 }}>{f.desc}</p>
-                                <span style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, color: '#0A0A0A', marginTop: 20 }}>→</span>
-                            </motion.div>
-                        ))}
+                                <div className="p-8 lg:p-12 grid-lines h-full">
+                                    <div className="flex justify-between items-end mb-12">
+                                        <div>
+                                            <div className="text-[10px] lg:text-xs text-zinc-400 uppercase tracking-widest mb-2 font-bold">Risk Probability</div>
+                                            <div className="text-5xl lg:text-6xl font-display font-bold text-zinc-900 tracking-tighter">12.4%</div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-[10px] lg:text-xs text-zinc-400 uppercase tracking-widest mb-2 font-bold">Status</div>
+                                            <div className="inline-flex items-center px-3 py-1 bg-green-50 text-green-600 text-[10px] font-bold rounded-full border border-green-100 uppercase tracking-wider">Stable</div>
+                                        </div>
+                                    </div>
+                                    <div className="relative h-48 lg:h-64 w-full mt-4">
+                                        <svg className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                                            <path d="M0,150 C50,140 100,100 150,110 C200,120 250,80 300,90 C350,100 400,40 450,50 C500,60 550,20 600,30" fill="none" stroke="#18181b" strokeWidth="3" vectorEffect="non-scaling-stroke"></path>
+                                            <path d="M0,150 C50,140 100,100 150,110 C200,120 250,80 300,90 C350,100 400,40 450,50 C500,60 550,20 600,30 L600,200 L0,200 Z" fill="url(#gradientChart)" opacity="0.1"></path>
+                                            <defs>
+                                                <linearGradient id="gradientChart" x1="0%" x2="0%" y1="0%" y2="100%">
+                                                    <stop offset="0%" style={{ stopColor: '#18181b', stopOpacity: 1 }}></stop>
+                                                    <stop offset="100%" style={{ stopColor: '#18181b', stopOpacity: 0 }}></stop>
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                        <div className="absolute top-[30px] right-[10%] w-5 h-5 bg-zinc-900 rounded-full border-4 border-white shadow-2xl pulse-glow"></div>
+                                        <div className="absolute top-[0px] right-[4%] bg-zinc-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-full shadow-2xl tracking-wider">
+                                            PROJECTED +14.2%
+                                        </div>
+                                    </div>
+                                    <div className="mt-12 grid grid-cols-4 gap-4 opacity-40">
+                                        <div className="h-1.5 w-full bg-zinc-200 rounded-full"></div>
+                                        <div className="h-1.5 w-full bg-zinc-200 rounded-full"></div>
+                                        <div className="h-1.5 w-full bg-zinc-200 rounded-full"></div>
+                                        <div className="h-1.5 w-full bg-zinc-200 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </motion.div>
-            </section>
-
-            {/* ── SECTION 5: DEMO STRIP (intentional dark) ─────────── */}
-            <section style={{ background: '#0A0A0A', padding: '96px 24px' }}>
-                <div className="max-w-4xl mx-auto text-center">
-                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger}>
-                        <motion.h2 variants={fadeIn} className="font-serif-display"
-                            style={{ fontSize: 'clamp(32px, 5vw, 48px)', color: '#FFFFFF', lineHeight: 1.15, marginBottom: 16, letterSpacing: '-0.01em' }}>
-                            The collapse at Zara Bakeries started in October 2024.
-                        </motion.h2>
-                        <motion.p variants={fadeIn} style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, color: '#9CA3AF', marginBottom: 48 }}>
-                            FailGuard detected it 14 months before anyone else noticed.
-                        </motion.p>
-                        {/* 4 stat boxes */}
-                        <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                            {DEMO_STATS.map((s, i) => (
-                                <motion.div key={i} variants={fadeIn}
-                                    className="border rounded-xl p-5 text-center"
-                                    style={{ borderColor: 'rgba(255,255,255,0.12)', background: 'transparent' }}>
-                                    <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 22, color: '#FFFFFF', letterSpacing: '-0.02em', marginBottom: 4 }}>{s.val}</p>
-                                    <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: '#6B7280' }}>{s.label}</p>
-                                </motion.div>
-                            ))}
-                        </motion.div>
-                        <motion.button variants={fadeIn}
-                            onClick={() => { window.location.href = '/dashboard'; }}
-                            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                            className="px-7 py-3.5 rounded-full border border-white text-white"
-                            style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: 14, background: 'transparent', cursor: 'pointer', transition: 'all 0.2s ease' }}>
-                            See the Full Autopsy →
-                        </motion.button>
-                    </motion.div>
                 </div>
             </section>
 
-            {/* ── SECTION 6: FOOTER ────────────────────────────────── */}
-            <footer style={{ background: '#FAFAFA', borderTop: '1px solid #E5E7EB', padding: '32px 24px' }}>
-                <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div>
-                        <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 14, color: '#0A0A0A' }}>FailGuard AI</p>
-                        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF', marginTop: 2 }}>Explainable failure intelligence.</p>
+            <section id="about" className="py-12 lg:py-16 bg-white relative z-10 border-t border-zinc-100">
+                <div className="max-w-6xl mx-auto px-6 text-center sm:text-left">
+                    <div className="max-w-4xl lg:max-w-none mx-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+                            <div className="lg:col-span-4 space-y-12">
+                                <div className="lg:sticky lg:top-32">
+                                    <h2 className="font-display font-bold text-xs tracking-widest-editorial uppercase text-zinc-400 mb-6">
+                                        The Methodology
+                                    </h2>
+                                    <div className="h-px w-full bg-zinc-200 mb-8"></div>
+                                    <div className="bg-zinc-50 p-8 border border-zinc-100 rounded-2xl">
+                                        <span className="block text-4xl lg:text-5xl font-display font-bold text-zinc-900 mb-3 tracking-tighter">94%</span>
+                                        <p className="text-xs lg:text-sm text-zinc-500 font-medium leading-relaxed uppercase tracking-wider">
+                                            of business failures are preceded by detectable patterns in operational data.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-8 space-y-10 text-zinc-600 text-lg lg:text-2xl leading-relaxed font-light">
+                                <p className="drop-cap text-zinc-900">
+                                    Businesses rarely fail suddenly. Collapse is almost always preceded by a silent accumulation of risk—a compounding series of small decisions that slowly erode operational health and cash runway.
+                                </p>
+                                <p>
+                                    Traditional analytics dashboards show you lagging indicators of performance. They tell you what happened last quarter, but they do not alert you when your current trajectory crosses the threshold into fatal insolvency. By the time the red flags appear on a P&L statement, the inertia of failure is often too great to reverse.
+                                </p>
+                                <div className="pl-8 lg:pl-12 border-l-4 border-zinc-900 py-4 my-12 bg-zinc-50/50 pr-8 rounded-r-xl">
+                                    <p className="text-2xl lg:text-3xl font-display font-medium text-zinc-900 italic tracking-tight text-left">
+                                        "FailGuard AI shifts the paradigm from <span className="text-zinc-400 font-serif not-italic">observation</span> to <span className="text-zinc-900 underline decoration-zinc-300 underline-offset-8">prediction</span>."
+                                    </p>
+                                </div>
+                                <p>
+                                    We detect early risk signals, trace the causal origin of decline, and provide executable AI recovery plans to course-correct before it's too late. It is not just about seeing the data; it is about understanding the narrative your data is trying to tell you about your future.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex gap-6">
-                        <button onClick={() => navigate('/')} style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF', background: 'none', border: 'none', cursor: 'pointer' }}
-                            className="hover:text-[#374151] transition-colors">Home</button>
-                        <button onClick={() => navigate('/dashboard')} style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF', background: 'none', border: 'none', cursor: 'pointer' }}
-                            className="hover:text-[#374151] transition-colors">Dashboard</button>
+                </div>
+            </section>
+
+            <section id="features" className="py-12 lg:py-16 relative z-10 border-t border-zinc-100">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="max-w-3xl lg:max-w-none mb-8 lg:mb-12">
+                        <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-24">
+                            <div className="lg:max-w-2xl">
+                                <h2 className="font-display font-bold text-xs tracking-widest-editorial uppercase text-zinc-500 mb-4 text-center lg:text-left">
+                                    Core Capabilities
+                                </h2>
+                                <h3 className="text-4xl sm:text-5xl md:text-6xl font-display font-semibold text-zinc-900 tracking-tighter text-center lg:text-left">
+                                    Intelligence for Survival.
+                                </h3>
+                            </div>
+                            <p className="text-zinc-500 lg:max-w-sm text-base leading-relaxed text-center lg:text-left mx-auto lg:mx-0 opacity-80 font-medium">
+                                Our system continuously audits your operational health, providing clarity in chaos and foresight in uncertainty.
+                            </p>
+                        </div>
                     </div>
-                    <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#9CA3AF' }}>Built at TechBiz 2026 · Presidency University</p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-auto">
+                        <div className="lg:col-span-2 glass-card rounded-[2.5rem] p-8 lg:p-14 relative overflow-hidden group transition-all duration-700 hover:shadow-2xl micro-glow flex flex-col justify-between border-white/80">
+                            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-zinc-200/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-zinc-300/30 transition-colors duration-700"></div>
+                            <div className="relative z-10">
+                                <div className="w-14 h-14 bg-zinc-900 rounded-2xl flex items-center justify-center mb-10 shadow-xl scale-95 group-hover:scale-100 transition-transform">
+                                    <span className="material-symbols-outlined text-white text-3xl">bolt</span>
+                                </div>
+                                <h4 className="font-display font-bold text-3xl lg:text-4xl text-zinc-900 mb-6 tracking-tighter">
+                                    Real-Time Failure Prediction
+                                </h4>
+                                <p className="text-zinc-600 leading-relaxed text-lg lg:text-xl max-w-xl font-light">
+                                    Deterministic scoring logic continuously evaluates your live operational metrics against established collapse trajectories to forecast survival probability.
+                                </p>
+                            </div>
+                            <div className="mt-12 relative h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-zinc-900 w-[72%] rounded-full shadow-[0_0_10px_rgba(0,0,0,0.2)]"></div>
+                            </div>
+                            <div className="mt-4 flex justify-between items-center">
+                                <span className="font-mono text-[10px] lg:text-xs font-bold text-zinc-900 uppercase tracking-[0.2em]">Operational Health Index</span>
+                                <span className="font-mono text-[10px] lg:text-xs font-bold text-zinc-400 uppercase tracking-widest">72% Confidence</span>
+                            </div>
+                        </div>
+
+                        <div className="lg:col-span-1 glass-card rounded-[2.5rem] p-8 lg:p-12 relative overflow-hidden group transition-all duration-700 hover:shadow-2xl micro-glow border-white/80">
+                            <div className="w-14 h-14 bg-white border border-zinc-200 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:shadow-md transition-shadow">
+                                <span className="material-symbols-outlined text-zinc-900 text-3xl font-light">search</span>
+                            </div>
+                            <h4 className="font-display font-bold text-2xl text-zinc-900 mb-5 tracking-tight">
+                                Failure Autopsy Mode
+                            </h4>
+                            <p className="text-zinc-500 leading-relaxed text-lg font-light">
+                                A forensic timeline engine that traces the causal chain of events to pinpoint exactly when, why, and where the decline began.
+                            </p>
+                            <div className="mt-10 pt-10 border-t border-zinc-100/50">
+                                <div className="flex -space-x-4 opacity-40 group-hover:opacity-100 transition-opacity">
+                                    <div className="w-10 h-10 rounded-full bg-zinc-200 border-2 border-white"></div>
+                                    <div className="w-10 h-10 rounded-full bg-zinc-300 border-2 border-white"></div>
+                                    <div className="w-10 h-10 rounded-full bg-zinc-400 border-2 border-white"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="lg:col-span-1 glass-card rounded-[2.5rem] p-8 lg:p-12 relative overflow-hidden group transition-all duration-700 hover:shadow-2xl micro-glow border-white/80">
+                            <div className="w-14 h-14 bg-white border border-zinc-200 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:shadow-md transition-shadow">
+                                <span className="material-symbols-outlined text-zinc-900 text-3xl font-light">science</span>
+                            </div>
+                            <h4 className="font-display font-bold text-2xl text-zinc-900 mb-5 tracking-tight">
+                                What-If Simulator
+                            </h4>
+                            <p className="text-zinc-500 leading-relaxed text-lg font-light">
+                                Test alternate business decisions in a safe sandbox environment to instantly see their impact on your operational survival.
+                            </p>
+                        </div>
+
+                        <div className="lg:col-span-2 glass-card rounded-[2.5rem] p-8 lg:p-12 flex flex-col sm:flex-row items-center justify-between relative overflow-hidden group transition-all duration-700 hover:shadow-2xl micro-glow gap-12 border-white/80">
+                            <div className="max-w-md text-center sm:text-left">
+                                <h4 className="font-display font-bold text-3xl text-zinc-900 mb-4 tracking-tighter">
+                                    AI-Driven Recovery
+                                </h4>
+                                <p className="text-zinc-500 text-lg font-light leading-relaxed">
+                                    Receive machine-generated, step-by-step action plans to reverse negative trends before they hit critical thresholds.
+                                </p>
+                            </div>
+                            <div
+                                onClick={() => navigate('/dashboard')}
+                                className="w-24 h-24 bg-zinc-50 rounded-full flex items-center justify-center border border-zinc-100 group-hover:bg-zinc-900 group-hover:border-zinc-900 group-hover:scale-110 transition-all duration-500 cursor-pointer shadow-sm group-hover:shadow-xl group-active:scale-95"
+                            >
+                                <span className="material-symbols-outlined text-zinc-400 group-hover:text-white text-4xl transition-colors">arrow_outward</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer className="py-24 bg-white border-t border-zinc-200 relative z-10">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 mb-24">
+                        <div className="lg:col-span-4 flex flex-col gap-8">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg">
+                                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                                </div>
+                                <span className="font-display font-bold text-2xl text-zinc-900 tracking-tighter">FailGuard AI</span>
+                            </div>
+                            <p className="text-lg text-zinc-500 max-w-xs leading-relaxed font-light">
+                                Explainable failure intelligence for modern businesses. We help you survive the improbable.
+                            </p>
+                            <div className="flex gap-4 mt-4">
+                                <div className="w-10 h-10 rounded-full bg-zinc-50 flex items-center justify-center text-zinc-400 hover:bg-zinc-900 hover:text-white transition-all cursor-pointer border border-zinc-100 translate-y-0 hover:-translate-y-1">
+                                    <span className="material-symbols-outlined text-xl">share</span>
+                                </div>
+                                <div className="w-10 h-10 rounded-full bg-zinc-50 flex items-center justify-center text-zinc-400 hover:bg-zinc-900 hover:text-white transition-all cursor-pointer border border-zinc-100 translate-y-0 hover:-translate-y-1">
+                                    <span className="material-symbols-outlined text-xl">language</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-12">
+                            <div className="flex flex-col gap-6">
+                                <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-[0.2em] opacity-40">Intelligence</span>
+                                <nav className="flex flex-col gap-4 text-base font-medium">
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer" onClick={() => navigate('/dashboard')}>Real-Time Prediction</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer" onClick={() => navigate('/dashboard')}>Failure Autopsy</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer" onClick={() => navigate('/dashboard')}>What-If Simulator</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer" onClick={() => navigate('/dashboard')}>Recovery Roadmap</a>
+                                </nav>
+                            </div>
+                            <div className="flex flex-col gap-6">
+                                <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-[0.2em] opacity-40">Philosophy</span>
+                                <nav className="flex flex-col gap-4 text-base font-medium">
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer" href="#about">The Methodology</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer" href="#features">Platform Overview</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer">Manifesto</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer">Whitepaper</a>
+                                </nav>
+                            </div>
+                            <div className="flex flex-col gap-6">
+                                <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-[0.2em] opacity-40">System</span>
+                                <nav className="flex flex-col gap-4 text-base font-medium">
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer">Security</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer">Privacy Policy</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer">Terms of Service</a>
+                                    <a className="text-zinc-500 hover:text-zinc-900 transition-colors cursor-pointer">Contact Support</a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="pt-12 border-t border-zinc-100 flex flex-col sm:flex-row justify-between items-center gap-6">
+                        <p className="text-xs text-zinc-400 font-mono tracking-widest uppercase">
+                            © 2026 FailGuard AI Inc. // PREDICTIVE RISK INTELLIGENCE
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 alert-pulse"></div>
+                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Network Operational</span>
+                        </div>
+                    </div>
                 </div>
             </footer>
         </div>
