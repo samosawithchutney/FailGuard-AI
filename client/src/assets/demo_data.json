@@ -1,0 +1,433 @@
+{
+    "business": {
+        "name": "Zara Bakeries Pvt Ltd",
+        "industry": "Food & Beverage",
+        "founded": "2023",
+        "employees": 12,
+        "location": "Bengaluru, India",
+        "datasetPeriod": "January 2023 – December 2025",
+        "datasetMonths": 36
+    },
+    "currentMetrics": {
+        "cashDays": 67,
+        "revenueGrowth": -8.2,
+        "burnRateRatio": 1.34,
+        "churnRate": 14,
+        "grossMargin": 0.28
+    },
+    "failureScore": 74,
+    "riskBand": "DANGER",
+    "monthlyRevenue": 380000,
+    "monthlyBurn": 509200,
+    "triggerEvent": {
+        "date": "2024-10-12",
+        "type": "hiring_spike",
+        "description": "Hired 2 staff + launched 20% discount campaign",
+        "burnImpact": "+34%",
+        "cashImpact": "-113 days runway",
+        "monthsBeforeCollapse": 14
+    },
+    "topRisks": [
+        {
+            "factor": "Burn Rate",
+            "value": "1.34x revenue",
+            "severity": "CRITICAL"
+        },
+        {
+            "factor": "Cash Runway",
+            "value": "67 days",
+            "severity": "DANGER"
+        },
+        {
+            "factor": "Revenue Growth",
+            "value": "-8.2% MoM",
+            "severity": "DANGER"
+        }
+    ],
+    "alerts": [
+        {
+            "id": 1,
+            "time": "2h ago",
+            "msg": "Burn rate exceeded 1.3x revenue threshold",
+            "level": "critical"
+        },
+        {
+            "id": 2,
+            "time": "1d ago",
+            "msg": "Monthly revenue declined for 3rd consecutive month",
+            "level": "danger"
+        },
+        {
+            "id": 3,
+            "time": "3d ago",
+            "msg": "Customer churn rate crossed 10% threshold",
+            "level": "warning"
+        },
+        {
+            "id": 4,
+            "time": "1w ago",
+            "msg": "Gross margin dropped below 30%",
+            "level": "warning"
+        },
+        {
+            "id": 5,
+            "time": "2w ago",
+            "msg": "Cash runway fell below 90-day safety threshold",
+            "level": "danger"
+        }
+    ],
+    "timeline": [
+        {
+            "date": "2023-01-01",
+            "type": "normal",
+            "label": "Business launched. First revenue ₹1.8L/mo",
+            "score": 10,
+            "description": "Zara Bakeries opens in Bengaluru. Early traction with local orders and one catering contract.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-02-01",
+            "type": "normal",
+            "label": "Second month revenue grows to ₹2.1L",
+            "score": 11,
+            "description": "Word-of-mouth driving new customers. Gross margin healthy at 48%.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-03-01",
+            "type": "normal",
+            "label": "First corporate catering contract signed",
+            "score": 12,
+            "description": "Secured monthly catering contract worth ₹45,000. Revenue now ₹2.5L/mo.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-04-01",
+            "type": "normal",
+            "label": "Revenue ₹2.9L. Cash runway 160 days",
+            "score": 13,
+            "description": "Strong summer season. Online orders growing 12% week-on-week.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-05-01",
+            "type": "normal",
+            "label": "Hired first full-time delivery staff",
+            "score": 14,
+            "description": "Team grows to 5. Burn rate at healthy 0.72x. Sustainable hiring.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-06-01",
+            "type": "normal",
+            "label": "Revenue grows to ₹3.2L/mo",
+            "score": 15,
+            "description": "Six months in. Revenue up 78% from launch. Business fundamentals strong.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-07-01",
+            "type": "normal",
+            "label": "New product line launched. Margins stable",
+            "score": 15,
+            "description": "Premium cake range added. Gross margin maintained at 45%.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-08-01",
+            "type": "normal",
+            "label": "Revenue ₹3.6L. Second catering contract",
+            "score": 16,
+            "description": "Business growing steadily. Churn rate low at 3%. Customer retention strong.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-09-01",
+            "type": "normal",
+            "label": "Team grows to 8. Revenue ₹3.9L/mo",
+            "score": 17,
+            "description": "Hired 3 more staff to handle order volume. Burn rate 0.81x. Still healthy.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-10-01",
+            "type": "normal",
+            "label": "Festival season boost. Revenue ₹4.4L",
+            "score": 17,
+            "description": "Diwali orders drive best month yet. Cash runway extended to 172 days.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-11-01",
+            "type": "normal",
+            "label": "Post-festival normalisation. Revenue ₹3.8L",
+            "score": 19,
+            "description": "Expected seasonal dip. Fundamentals remain healthy. Score stable.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2023-12-01",
+            "type": "normal",
+            "label": "Year 1 complete. Score 20. All systems healthy",
+            "score": 20,
+            "description": "First full year closed. Revenue grew from ₹1.8L to ₹4.1L/mo. Gross margin 44%. Cash runway 165 days. Business is healthy.",
+            "rootCause": false,
+            "phase": "Year 1 — Healthy Growth"
+        },
+        {
+            "date": "2024-01-01",
+            "type": "normal",
+            "label": "Year 2 begins. Revenue ₹4.0L. Score 22",
+            "score": 22,
+            "description": "Post-holiday slowdown. Expected. No alarm signals yet.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-02-01",
+            "type": "warning",
+            "label": "Ingredient costs rise 12%. Margin pressure begins",
+            "score": 27,
+            "description": "Wheat and dairy prices up. Gross margin slips from 44% to 38%. Leadership does not adjust pricing.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-03-01",
+            "type": "warning",
+            "label": "New competitor opens nearby. Churn ticks up",
+            "score": 31,
+            "description": "Competing bakery opens 800 metres away. Monthly churn rises from 3% to 6%.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-04-01",
+            "type": "warning",
+            "label": "Gross margin dips below 35%",
+            "score": 35,
+            "description": "Cost increases not passed to customers. Margin now 33%. FailGuard flags this. Leadership ignores.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-05-01",
+            "type": "warning",
+            "label": "Revenue growth slows to +1.8% MoM",
+            "score": 38,
+            "description": "Growth nearly flat. Competitor is absorbing new customers. Existing customer retention weakening.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-06-01",
+            "type": "warning",
+            "label": "Churn rate crosses 8%. Cash runway 142 days",
+            "score": 42,
+            "description": "Customer base slowly eroding. Revenue still positive but deceleration clear.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-07-01",
+            "type": "warning",
+            "label": "Revenue growth turns flat: +0.3% MoM",
+            "score": 46,
+            "description": "Effectively zero growth. Combined effect of competition and margin pressure now visible.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-08-01",
+            "type": "warning",
+            "label": "Revenue turns negative: -2.1% MoM",
+            "score": 49,
+            "description": "First month of revenue decline. Burn rate creeping up to 0.98x. Almost spending what is earned.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-09-01",
+            "type": "warning",
+            "label": "Leadership decides to respond. Plans hiring + discount",
+            "score": 51,
+            "description": "Owner decides to hire 2 more staff and launch a 20% discount campaign to win back customers. Decision not yet executed.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-10-12",
+            "type": "root_cause",
+            "label": "ROOT CAUSE: Hired 2 staff + launched 20% discount",
+            "score": 58,
+            "burnImpact": "+34%",
+            "rootCause": true,
+            "description": "Two new hires added ₹72,000/mo to fixed payroll. 20% discount campaign reduced per-order margin from 33% to 14%. Monthly burn jumped from ₹3.1L to ₹5.09L overnight. This single compounded decision is the origin of the collapse.",
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-11-01",
+            "type": "critical",
+            "label": "Burn rate hits 1.18x revenue. First critical alert",
+            "score": 63,
+            "description": "Spending more than earning for the first time. Cash runway drops from 142 to 101 days in 3 weeks.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2024-12-01",
+            "type": "critical",
+            "label": "Year 2 close. Score 65. Business in trouble",
+            "score": 65,
+            "description": "Year ended with burn rate 1.22x, churn 11%, revenue -5.4% MoM. Cash runway 89 days. The discount did not win back customers — it just burned cash.",
+            "rootCause": false,
+            "phase": "Year 2 — Hidden Decline"
+        },
+        {
+            "date": "2025-01-01",
+            "type": "critical",
+            "label": "New year. Old problems. Score 66",
+            "score": 66,
+            "description": "Discount campaign ended but damage done. Customers who returned on discount are now churning again at full price.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        },
+        {
+            "date": "2025-02-01",
+            "type": "critical",
+            "label": "Revenue decline accelerates: -6.8% MoM",
+            "score": 68,
+            "description": "Three consecutive months of revenue decline. Burn rate 1.28x. Cash runway 82 days.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        },
+        {
+            "date": "2025-03-01",
+            "type": "critical",
+            "label": "Cash runway crosses below 90-day threshold",
+            "score": 69,
+            "description": "Cash runway now 79 days — below the 90-day safety threshold. FailGuard issues CRITICAL alert. Owner still not aware of full picture.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        },
+        {
+            "date": "2025-04-01",
+            "type": "critical",
+            "label": "Churn rate hits 12%. Customer base eroding fast",
+            "score": 70,
+            "description": "12% of remaining customers left this month. Combined with revenue decline, the business is now in accelerating deterioration.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        },
+        {
+            "date": "2025-05-01",
+            "type": "critical",
+            "label": "Burn rate hits 1.3x. Gross margin 29%",
+            "score": 71,
+            "description": "Every month the business operates it loses ground. Gross margin now 29%, down from 44% at peak.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        },
+        {
+            "date": "2025-06-01",
+            "type": "critical",
+            "label": "Revenue -8.1% MoM. Staff morale declining",
+            "score": 72,
+            "description": "Third year of operation but revenue is now lower than Month 4 of Year 1. Structural decline confirmed.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        },
+        {
+            "date": "2025-07-01",
+            "type": "critical",
+            "label": "Cash runway 71 days. Burn 1.32x revenue",
+            "score": 73,
+            "description": "Running out of time. Without intervention the business has roughly 10 weeks before it cannot meet payroll.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        },
+        {
+            "date": "2025-12-01",
+            "type": "critical",
+            "label": "Current state. Score 74. DANGER. 67 days cash left",
+            "score": 74,
+            "description": "This is today. Five indicators in the danger zone simultaneously. Cash runway 67 days. Burn rate 1.34x. Revenue -8.2% MoM. Churn 14%. Gross margin 28%. Intervention required immediately.",
+            "rootCause": false,
+            "phase": "Year 3 — Visible Collapse"
+        }
+    ],
+    "historicalScores": [
+        {
+            "month": "Jan 23",
+            "score": 10
+        },
+        {
+            "month": "Apr 23",
+            "score": 13
+        },
+        {
+            "month": "Jul 23",
+            "score": 15
+        },
+        {
+            "month": "Oct 23",
+            "score": 17
+        },
+        {
+            "month": "Jan 24",
+            "score": 22
+        },
+        {
+            "month": "Apr 24",
+            "score": 35
+        },
+        {
+            "month": "Jul 24",
+            "score": 46
+        },
+        {
+            "month": "Oct 24",
+            "score": 58
+        },
+        {
+            "month": "Jan 25",
+            "score": 66
+        },
+        {
+            "month": "Apr 25",
+            "score": 70
+        },
+        {
+            "month": "Jul 25",
+            "score": 73
+        },
+        {
+            "month": "Dec 25",
+            "score": 74
+        }
+    ],
+    "datasetSummary": {
+        "totalMonths": 36,
+        "periodStart": "2023-01-01",
+        "periodEnd": "2025-12-01",
+        "peakHealthScore": 10,
+        "currentScore": 74,
+        "rootCauseDate": "2024-10-12",
+        "monthsFromRootCauseToCurrentScore": 14,
+        "year1AvgScore": 15,
+        "year2AvgScore": 41,
+        "year3AvgScore": 70,
+        "keyInsight": "Root cause occurred 14 months before reaching DANGER. Existing tools detected nothing during this window. FailGuard flagged it on day one."
+    }
+}
